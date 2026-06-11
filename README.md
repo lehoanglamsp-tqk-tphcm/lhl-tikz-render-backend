@@ -189,3 +189,4 @@ Response thành công:
 - Không phụ thuộc dvisvgm/Ghostscript để render SVG.
 - Không bị lỗi trình duyệt không hiển thị data:image/svg+xml.
 - Ảnh PNG base64 hiển thị giống ảnh Word/file ảnh trong LHL Tool.
+Trigger deploy V103A6
