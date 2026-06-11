@@ -1,0 +1,18 @@
+LHL TikZ Render Backend V103A6 PNG
+=================================
+Mục tiêu:
+- Bỏ hướng SVG vì preview LHL Tool không hiện ổn định.
+- Render TikZ sang PNG base64 chất lượng cao.
+
+Pipeline:
+1) xelatex tạo PDF từ documentclass standalone.
+2) standalone tự crop sát hình.
+3) pdftocairo chuyển PDF sang PNG 300dpi.
+4) API trả image_base64 PNG.
+
+Endpoint giữ nguyên:
+POST /render-tikz
+
+Sau khi upload lên GitHub repo backend:
+- Render sẽ tự deploy lại.
+- Khi Live, dùng frontend V103G để gọi PNG.

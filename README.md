@@ -1,3 +1,5 @@
+# LHL TikZ Render Backend V103A6
+
 # LHL TikZ Render Backend V103A5
 
 Backend độc lập để render TikZ online ra SVG cho LHL Tool Online.
@@ -152,3 +154,38 @@ Sau đó nút TikZ SVG sẽ gửi code TikZ lên API và chèn SVG vào editor.
 - `--bbox=min` giúp crop sát hình TikZ.
 - `--no-fonts` giúp SVG hiển thị ổn định hơn khi chèn vào trình duyệt.
 - Tăng `PREAMBLE_VERSION` để tránh cache SVG cũ.
+
+
+## V103A6 update
+
+Bản này đổi hướng từ SVG sang PNG base64 chất lượng cao để LHL Tool hiển thị chắc chắn trong preview.
+
+Pipeline mới:
+
+```text
+TikZ code -> standalone PDF crop sát hình -> pdftocairo PNG 300dpi -> image_base64
+```
+
+API vẫn là:
+
+```text
+POST /render-tikz
+```
+
+Response thành công:
+
+```json
+{
+  "ok": true,
+  "format": "png",
+  "mime": "image/png",
+  "image_base64": "...",
+  "cached": false,
+  "log": ""
+}
+```
+
+Ưu điểm:
+- Không phụ thuộc dvisvgm/Ghostscript để render SVG.
+- Không bị lỗi trình duyệt không hiển thị data:image/svg+xml.
+- Ảnh PNG base64 hiển thị giống ảnh Word/file ảnh trong LHL Tool.

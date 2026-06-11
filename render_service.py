@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import subprocess
 import tempfile
@@ -11,18 +12,13 @@ from security import validate_tikz_code
 CACHE_DIR = Path(__file__).resolve().parent / "cache"
 CACHE_DIR.mkdir(exist_ok=True)
 
-PREAMBLE_VERSION = "lhl-v103a5-xelatex-xdv-bboxmin-2026-06-11"
+PREAMBLE_VERSION = "lhl-v103a6-png-300dpi-2026-06-11"
 
 
 def normalize_tikz_body(tikz: str) -> str:
     code = (tikz or "").strip()
     if not code:
         return ""
-
-    # Hỗ trợ code TikZ cũ hay dùng trong đề Toán:
-    # - >=stealth cần library arrows; backend đã nạp arrows.
-    # - Một số nguồn sinh \tikzstyle vẫn để nguyên cho tương thích.
-    # Không tự thay nội dung hình quá mạnh để tránh làm sai code của thầy.
 
     has_begin = r"\begin{tikzpicture}" in code
     has_end = r"\end{tikzpicture}" in code
@@ -70,11 +66,15 @@ def wrap_standalone_tex(tikz: str) -> str:
 """
 
 
-def cache_key(tikz: str, engine: str) -> str:
+def cache_key(tikz: str, engine: str, fmt: str, dpi: int) -> str:
     h = hashlib.sha256()
     h.update(PREAMBLE_VERSION.encode("utf-8"))
     h.update(b"\n")
     h.update(engine.encode("utf-8"))
+    h.update(b"\n")
+    h.update(fmt.encode("utf-8"))
+    h.update(b"\n")
+    h.update(str(dpi).encode("utf-8"))
     h.update(b"\n")
     h.update((tikz or "").encode("utf-8"))
     return h.hexdigest()
@@ -87,74 +87,103 @@ def short_log(text: str, limit: int = 8000) -> str:
     return text[-limit:]
 
 
-def render_tikz_to_svg(tikz: str, engine: str = "xelatex", timeout_seconds: int = 20) -> Dict[str, Any]:
+def render_tikz_to_png(tikz: str, engine: str = "xelatex", timeout_seconds: int = 30, dpi: int = 300) -> Dict[str, Any]:
     ok, err = validate_tikz_code(tikz)
     if not ok:
         return {"ok": False, "error": err, "log": ""}
 
     engine = engine if engine in {"xelatex", "lualatex"} else "xelatex"
-    key = cache_key(tikz, engine)
-    cached_svg = CACHE_DIR / f"{key}.svg"
+    dpi = int(dpi or 300)
+    if dpi < 120:
+        dpi = 120
+    if dpi > 600:
+        dpi = 600
 
-    if cached_svg.exists():
+    key = cache_key(tikz, engine, "png", dpi)
+    cached_png = CACHE_DIR / f"{key}.png"
+
+    if cached_png.exists():
         return {
             "ok": True,
-            "format": "svg",
-            "svg": cached_svg.read_text(encoding="utf-8", errors="ignore"),
+            "format": "png",
+            "mime": "image/png",
+            "image_base64": base64.b64encode(cached_png.read_bytes()).decode("ascii"),
             "cached": True,
             "log": "",
         }
 
-    with tempfile.TemporaryDirectory(prefix="lhl_tikz_") as tmp:
+    with tempfile.TemporaryDirectory(prefix="lhl_tikz_png_") as tmp:
         tmp_path = Path(tmp)
         tex_path = tmp_path / "main.tex"
-        xdv_path = tmp_path / "main.xdv"
-        svg_path = tmp_path / "output.svg"
+        pdf_path = tmp_path / "main.pdf"
+        png_path = tmp_path / "output.png"
 
         tex_path.write_text(wrap_standalone_tex(tikz), encoding="utf-8")
 
         try:
+            # standalone sẽ tạo PDF đã crop sát hình TikZ.
             p1 = subprocess.run(
-                [engine, "-no-pdf", "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
+                [engine, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
                 cwd=tmp_path,
                 capture_output=True,
                 text=True,
                 timeout=timeout_seconds,
             )
 
-            if p1.returncode != 0 or not xdv_path.exists():
+            if p1.returncode != 0 or not pdf_path.exists():
                 return {
                     "ok": False,
                     "error": "Biên dịch LaTeX thất bại.",
                     "log": short_log((p1.stdout or "") + "\n" + (p1.stderr or "")),
                 }
 
-            # --bbox=min: crop sát hình TikZ, tránh SVG bị khung quá lớn
-            # --exact: lấy bounding box chính xác hơn
-            # --no-fonts: đổi text sang path để trình duyệt hiển thị ổn định
+            # Ưu tiên pdftocairo từ poppler-utils: không phụ thuộc dvisvgm/Ghostscript.
             p2 = subprocess.run(
-                ["dvisvgm", "--bbox=min", "--exact", "--no-fonts", "main.xdv", "-o", "output.svg"],
+                ["pdftocairo", "-png", "-singlefile", "-r", str(dpi), "main.pdf", "output"],
                 cwd=tmp_path,
                 capture_output=True,
                 text=True,
                 timeout=timeout_seconds,
             )
 
-            if p2.returncode != 0 or not svg_path.exists():
-                return {
-                    "ok": False,
-                    "error": "Chuyển XDV sang SVG thất bại.",
-                    "log": short_log((p2.stdout or "") + "\n" + (p2.stderr or "")),
-                }
+            if p2.returncode != 0 or not png_path.exists():
+                # Dự phòng bằng mutool nếu pdftocairo lỗi.
+                p3 = subprocess.run(
+                    ["mutool", "draw", "-r", str(dpi), "-o", "output.png", "main.pdf"],
+                    cwd=tmp_path,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout_seconds,
+                )
+                if p3.returncode != 0 or not png_path.exists():
+                    return {
+                        "ok": False,
+                        "error": "Chuyển PDF sang PNG thất bại.",
+                        "log": short_log(
+                            "pdftocairo:\n" + (p2.stdout or "") + "\n" + (p2.stderr or "") +
+                            "\n\nmutool:\n" + (p3.stdout or "") + "\n" + (p3.stderr or "")
+                        ),
+                    }
 
-            svg = svg_path.read_text(encoding="utf-8", errors="ignore")
-            cached_svg.write_text(svg, encoding="utf-8")
+            cached_png.write_bytes(png_path.read_bytes())
 
-            return {"ok": True, "format": "svg", "svg": svg, "cached": False, "log": ""}
+            return {
+                "ok": True,
+                "format": "png",
+                "mime": "image/png",
+                "image_base64": base64.b64encode(png_path.read_bytes()).decode("ascii"),
+                "cached": False,
+                "log": "",
+            }
 
         except subprocess.TimeoutExpired:
             return {"ok": False, "error": f"TikZ render quá thời gian cho phép ({timeout_seconds}s).", "log": "Timeout"}
         except FileNotFoundError as e:
-            return {"ok": False, "error": "Server chưa cài đủ LaTeX/dvisvgm.", "log": str(e)}
+            return {"ok": False, "error": "Server chưa cài đủ LaTeX/pdftocairo/mutool.", "log": str(e)}
         except Exception as e:
-            return {"ok": False, "error": "Lỗi không xác định khi render TikZ.", "log": repr(e)}
+            return {"ok": False, "error": "Lỗi không xác định khi render TikZ PNG.", "log": repr(e)}
+
+
+# Giữ tên hàm cũ để app.py cũ vẫn gọi được.
+def render_tikz_to_svg(tikz: str, engine: str = "xelatex", timeout_seconds: int = 30) -> Dict[str, Any]:
+    return render_tikz_to_png(tikz=tikz, engine=engine, timeout_seconds=timeout_seconds, dpi=300)
