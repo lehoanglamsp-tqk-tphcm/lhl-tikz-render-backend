@@ -119,3 +119,16 @@ Sau đó nút TikZ SVG sẽ gửi code TikZ lên API và chèn SVG vào editor.
 
 - Bổ sung `\usetikzlibrary{arrows}` để hỗ trợ code TikZ cũ dùng `>=stealth`.
 - Đổi `PREAMBLE_VERSION` để cache SVG cũ không làm ảnh hưởng bản mới.
+
+
+## V103A3 update
+
+- Bỏ `fontspec` và `\setmainfont{...}` để tránh lỗi font trên Render.
+- Giữ engine `xelatex`.
+- Bổ sung thêm một số TikZ libraries:
+  - `decorations.markings`
+  - `decorations.pathmorphing`
+  - `through`
+  - `backgrounds`
+  - `fit`
+- Vẫn giữ `tikz`, `tkz-euclide`, `tkz-tab`, `arrows`, `arrows.meta`.

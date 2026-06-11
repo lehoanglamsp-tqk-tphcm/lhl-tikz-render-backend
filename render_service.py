@@ -11,7 +11,7 @@ from security import validate_tikz_code
 CACHE_DIR = Path(__file__).resolve().parent / "cache"
 CACHE_DIR.mkdir(exist_ok=True)
 
-PREAMBLE_VERSION = "lhl-v103a2-arrows-2026-06-11"
+PREAMBLE_VERSION = "lhl-v103a3-no-fontspec-more-libs-2026-06-11"
 
 
 def normalize_tikz_body(tikz: str) -> str:
@@ -45,8 +45,6 @@ def wrap_standalone_tex(tikz: str) -> str:
 \usepackage{xcolor}
 \usepackage{array}
 \usepackage{multirow}
-\usepackage{fontspec}
-\setmainfont{TeX Gyre Termes}
 
 \usetikzlibrary{
   calc,
@@ -56,9 +54,14 @@ def wrap_standalone_tex(tikz: str) -> str:
   arrows,
   arrows.meta,
   decorations.pathreplacing,
+  decorations.markings,
+  decorations.pathmorphing,
   patterns,
   positioning,
-  shapes.geometric
+  shapes.geometric,
+  through,
+  backgrounds,
+  fit
 }
 
 \begin{document}

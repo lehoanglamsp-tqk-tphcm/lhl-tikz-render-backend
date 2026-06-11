@@ -1,0 +1,37 @@
+LHL TikZ Render Backend V103A3
+==============================
+Sửa lỗi backend render TikZ trên Render:
+
+Lỗi thầy gặp:
+- LaTeX thất bại tại fontspec.
+- Nguyên nhân: backend dùng \usepackage{fontspec} và \setmainfont{TeX Gyre Termes}; server Render có thể không nạp đúng font.
+
+V103A3 sửa:
+1) Bỏ fontspec và setmainfont để tránh lỗi font.
+2) Giữ xelatex.
+3) Giữ các gói vẽ:
+   - tikz
+   - tkz-euclide
+   - tkz-tab
+   - amsmath, amssymb
+4) Bổ sung TikZ libraries:
+   - arrows
+   - arrows.meta
+   - calc
+   - angles
+   - quotes
+   - intersections
+   - decorations.pathreplacing
+   - decorations.markings
+   - decorations.pathmorphing
+   - patterns
+   - positioning
+   - shapes.geometric
+   - through
+   - backgrounds
+   - fit
+
+Cách cập nhật:
+- Upload đè các file V103A3 lên GitHub repo backend.
+- Commit changes.
+- Render tự deploy lại.
