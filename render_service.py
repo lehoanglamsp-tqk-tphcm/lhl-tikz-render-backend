@@ -11,7 +11,7 @@ from security import validate_tikz_code
 CACHE_DIR = Path(__file__).resolve().parent / "cache"
 CACHE_DIR.mkdir(exist_ok=True)
 
-PREAMBLE_VERSION = "lhl-v103a4-xelatex-xdv-dvisvgm-2026-06-11"
+PREAMBLE_VERSION = "lhl-v103a5-xelatex-xdv-bboxmin-2026-06-11"
 
 
 def normalize_tikz_body(tikz: str) -> str:
@@ -108,67 +108,42 @@ def render_tikz_to_svg(tikz: str, engine: str = "xelatex", timeout_seconds: int 
     with tempfile.TemporaryDirectory(prefix="lhl_tikz_") as tmp:
         tmp_path = Path(tmp)
         tex_path = tmp_path / "main.tex"
-        pdf_path = tmp_path / "main.pdf"
         xdv_path = tmp_path / "main.xdv"
         svg_path = tmp_path / "output.svg"
 
         tex_path.write_text(wrap_standalone_tex(tikz), encoding="utf-8")
 
         try:
-            # V103A4:
-            # Với xelatex, dùng -no-pdf để sinh main.xdv rồi chuyển XDV -> SVG.
-            # Cách này tránh lỗi Ghostscript mới khi dvisvgm xử lý PDF trên Render.
-            if engine == "xelatex":
-                p1 = subprocess.run(
-                    [engine, "-no-pdf", "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
-                    cwd=tmp_path,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout_seconds,
-                )
+            p1 = subprocess.run(
+                [engine, "-no-pdf", "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
+                cwd=tmp_path,
+                capture_output=True,
+                text=True,
+                timeout=timeout_seconds,
+            )
 
-                if p1.returncode != 0 or not xdv_path.exists():
-                    return {
-                        "ok": False,
-                        "error": "Biên dịch LaTeX thất bại.",
-                        "log": short_log((p1.stdout or "") + "\n" + (p1.stderr or "")),
-                    }
+            if p1.returncode != 0 or not xdv_path.exists():
+                return {
+                    "ok": False,
+                    "error": "Biên dịch LaTeX thất bại.",
+                    "log": short_log((p1.stdout or "") + "\n" + (p1.stderr or "")),
+                }
 
-                p2 = subprocess.run(
-                    ["dvisvgm", "main.xdv", "-n", "--exact", "-o", "output.svg"],
-                    cwd=tmp_path,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout_seconds,
-                )
-            else:
-                p1 = subprocess.run(
-                    [engine, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
-                    cwd=tmp_path,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout_seconds,
-                )
-
-                if p1.returncode != 0 or not pdf_path.exists():
-                    return {
-                        "ok": False,
-                        "error": "Biên dịch LaTeX thất bại.",
-                        "log": short_log((p1.stdout or "") + "\n" + (p1.stderr or "")),
-                    }
-
-                p2 = subprocess.run(
-                    ["dvisvgm", "--pdf", "main.pdf", "-n", "--exact", "-o", "output.svg"],
-                    cwd=tmp_path,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout_seconds,
-                )
+            # --bbox=min: crop sát hình TikZ, tránh SVG bị khung quá lớn
+            # --exact: lấy bounding box chính xác hơn
+            # --no-fonts: đổi text sang path để trình duyệt hiển thị ổn định
+            p2 = subprocess.run(
+                ["dvisvgm", "--bbox=min", "--exact", "--no-fonts", "main.xdv", "-o", "output.svg"],
+                cwd=tmp_path,
+                capture_output=True,
+                text=True,
+                timeout=timeout_seconds,
+            )
 
             if p2.returncode != 0 or not svg_path.exists():
                 return {
                     "ok": False,
-                    "error": "Chuyển PDF sang SVG thất bại.",
+                    "error": "Chuyển XDV sang SVG thất bại.",
                     "log": short_log((p2.stdout or "") + "\n" + (p2.stderr or "")),
                 }
 

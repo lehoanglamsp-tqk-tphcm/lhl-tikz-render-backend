@@ -1,0 +1,13 @@
+LHL TikZ Render Backend V103A5
+
+Mục tiêu bản này:
+- Fix lỗi SVG render ra quá nhỏ/không ôm sát hình trong preview.
+
+Điểm sửa chính:
+1) Giữ wrapper standalone border=2pt.
+2) Đổi pipeline sang: xelatex -no-pdf => main.xdv => dvisvgm.
+3) Lệnh dvisvgm dùng: --bbox=min --exact --no-fonts main.xdv -o output.svg
+4) Đổi PREAMBLE_VERSION để xoá ảnh hưởng cache cũ.
+
+Sau khi upload bản này lên GitHub, Render sẽ tự build lại nếu Auto-Deploy bật.
+Nếu không, vào Render > Manual Deploy > Deploy latest commit.
