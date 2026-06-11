@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 from render_service import render_tikz_to_svg
 
-app = FastAPI(title="LHL TikZ Render Backend", version="V103A3")
+app = FastAPI(title="LHL TikZ Render Backend", version="V103A4")
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,7 +29,7 @@ def root():
     return {
         "ok": True,
         "name": "LHL TikZ Render Backend",
-        "version": "V103A3",
+        "version": "V103A4",
         "endpoint": "/render-tikz",
     }
 

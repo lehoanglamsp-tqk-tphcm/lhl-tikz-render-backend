@@ -132,3 +132,13 @@ Sau đó nút TikZ SVG sẽ gửi code TikZ lên API và chèn SVG vào editor.
   - `backgrounds`
   - `fit`
 - Vẫn giữ `tikz`, `tkz-euclide`, `tkz-tab`, `arrows`, `arrows.meta`.
+
+
+## V103A4 update
+
+- Sửa lỗi Render/dvisvgm:
+  `ERROR: To process PDF files, either Ghostscript < 10.01.0 or mutool is required`.
+- Đổi pipeline mặc định:
+  `xelatex -no-pdf -> main.xdv -> dvisvgm main.xdv -> SVG`.
+- Cách này tránh phụ thuộc Ghostscript khi chuyển PDF sang SVG.
+- Dockerfile có thêm `mupdf-tools` làm phương án dự phòng.

@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tex-gyre \
     dvisvgm \
     ghostscript \
+    mupdf-tools \
     poppler-utils \
     fonts-dejavu \
     && apt-get clean \

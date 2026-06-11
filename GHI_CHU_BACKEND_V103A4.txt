@@ -1,0 +1,24 @@
+LHL TikZ Render Backend V103A4
+==============================
+Sửa lỗi thầy gặp khi Test API:
+
+Lỗi:
+Chuyển PDF sang SVG thất bại.
+ERROR: To process PDF files, either Ghostscript < 10.01.0 or mutool is required.
+The installed Ghostscript version 10.05.1 isn't supported.
+
+Nguyên nhân:
+- dvisvgm trên Render không xử lý PDF với Ghostscript 10.05.1.
+
+V103A4 sửa:
+1) Không đi qua PDF nữa với xelatex.
+2) Dùng:
+   xelatex -no-pdf main.tex  -> sinh main.xdv
+   dvisvgm main.xdv -n --exact -o output.svg
+3) Bổ sung mupdf-tools trong Dockerfile để dự phòng.
+
+Cách cập nhật:
+- Upload đè V103A4 lên repo backend GitHub.
+- Commit changes.
+- Chờ Render tự deploy lại đến Live.
+- Bấm Test API lại trong LHL Tool.
