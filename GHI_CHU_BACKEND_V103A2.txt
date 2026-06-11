@@ -1,0 +1,18 @@
+LHL TikZ Render Backend V103A2
+==============================
+Sửa lỗi backend compile một số code TikZ cũ:
+
+1) Bổ sung TikZ library:
+   arrows
+
+2) Mục tiêu:
+   Hỗ trợ code dùng:
+   \begin{tikzpicture}[..., >=stealth]
+   ...
+   \end{tikzpicture}
+
+3) Giữ nguyên API:
+   POST /render-tikz
+
+4) Sau khi upload bản này lên GitHub repo backend,
+   Render sẽ tự deploy lại.

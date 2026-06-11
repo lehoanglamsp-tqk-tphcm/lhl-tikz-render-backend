@@ -11,13 +11,18 @@ from security import validate_tikz_code
 CACHE_DIR = Path(__file__).resolve().parent / "cache"
 CACHE_DIR.mkdir(exist_ok=True)
 
-PREAMBLE_VERSION = "lhl-v103a-2026-06-11"
+PREAMBLE_VERSION = "lhl-v103a2-arrows-2026-06-11"
 
 
 def normalize_tikz_body(tikz: str) -> str:
     code = (tikz or "").strip()
     if not code:
         return ""
+
+    # Hỗ trợ code TikZ cũ hay dùng trong đề Toán:
+    # - >=stealth cần library arrows; backend đã nạp arrows.
+    # - Một số nguồn sinh \tikzstyle vẫn để nguyên cho tương thích.
+    # Không tự thay nội dung hình quá mạnh để tránh làm sai code của thầy.
 
     has_begin = r"\begin{tikzpicture}" in code
     has_end = r"\end{tikzpicture}" in code
@@ -48,6 +53,7 @@ def wrap_standalone_tex(tikz: str) -> str:
   angles,
   quotes,
   intersections,
+  arrows,
   arrows.meta,
   decorations.pathreplacing,
   patterns,

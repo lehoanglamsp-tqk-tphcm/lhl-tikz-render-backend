@@ -1,4 +1,4 @@
-# LHL TikZ Render Backend V103A
+# LHL TikZ Render Backend V103A2
 
 Backend độc lập để render TikZ online ra SVG cho LHL Tool Online.
 
@@ -89,7 +89,7 @@ Response lỗi:
 
 ## 5. Bảo mật
 
-V103A không bật `-shell-escape`.
+V103A2 không bật `-shell-escape`.
 
 Backend chặn các lệnh:
 
@@ -113,3 +113,9 @@ window.LHL_TIKZ_RENDER_API = "https://your-backend-domain/render-tikz";
 ```
 
 Sau đó nút TikZ SVG sẽ gửi code TikZ lên API và chèn SVG vào editor.
+
+
+## V103A2 update
+
+- Bổ sung `\usetikzlibrary{arrows}` để hỗ trợ code TikZ cũ dùng `>=stealth`.
+- Đổi `PREAMBLE_VERSION` để cache SVG cũ không làm ảnh hưởng bản mới.
