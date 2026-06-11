@@ -1,0 +1,22 @@
+LHL TOOL ONLINE ALPHA V103F
+=========================
+Nền gốc: V103E/V102.
+
+Sửa lỗi:
+- Backend TikZ test API OK.
+- Nút TikZ SVG đã chèn code:
+  <img src="data:image/svg+xml;base64,...">
+- Nhưng preview bên phải không hiện hình.
+
+V103F xử lý:
+1) Khi chèn SVG, style img dùng:
+   width:40%; max-width:40%; height:auto; display:block;
+   thay vì chỉ max-width.
+2) Bổ sung CSS cho .lhl-tikz-svg-wrap và img SVG trong preview.
+3) Bọc updatePreview để ép sửa/reload ảnh SVG sau khi preview render.
+4) Tự dọn lại các SVG đã chèn bởi bản cũ nếu thiếu width.
+
+Giữ nguyên:
+- Backend Render đã gắn sẵn.
+- Nút TikZ cũ ép gọi TikZ SVG Online.
+- Các phần V102 đã OK.

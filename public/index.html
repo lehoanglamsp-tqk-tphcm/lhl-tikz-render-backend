@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        window.MathJax = {
+          tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+          options: { enableMenu: false }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="style.css">
+<style id="lhl-v33-author-row-fix">
+.author-3d input#footer-author { white-space: nowrap !important; overflow: hidden !important; text-overflow: clip !important; }
+.page-start-3d { flex-shrink: 0 !important; }
+</style>
+
+<style id="lhl-v35-author-row-hard-fit">
+#author-input {
+  overflow: hidden !important;
+  text-overflow: clip !important;
+}
+.page-start-3d input#start-page-input {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.page-start-3d input#start-page-input::-webkit-outer-spin-button,
+.page-start-3d input#start-page-input::-webkit-inner-spin-button {
+  opacity: 1;
+}
+</style>
+
+<style id="lhl-v37-button-font-fix">
+button[onmousedown*="mergeAnswerExcelFiles"],
+button[onmousedown*="openConvertFileDialog"],
+button[onmousedown*="openGoogleScriptSettingDialog"] {
+  width: 72px !important;
+  min-width: 72px !important;
+  flex-basis: 72px !important;
+}
+button[onmousedown*="convertSelectedQuestionImageRight"] {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  width: 54px !important;
+  min-width: 54px !important;
+  flex-basis: 54px !important;
+}
+button[onmousedown*="mergeAnswerExcelFiles"] {
+  width: 68px !important;
+  min-width: 68px !important;
+  flex-basis: 68px !important;
+}
+.page-start-3d,
+.page-start-3d span,
+.page-start-3d input {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif !important;
+  font-weight: 700 !important;
+}
+button[onmousedown*="openGoogleScriptSettingDialog"] {
+  width: 72px !important;
+  min-width: 72px !important;
+  flex-basis: 72px !important;
+}
+button[onmousedown*="convertSelectedQuestionImageRight"] {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  width: 54px !important;
+  min-width: 54px !important;
+  flex-basis: 54px !important;
+}
+button[onmousedown*="mergeAnswerExcelFiles"] {
+  width: 68px !important;
+  min-width: 68px !important;
+  flex-basis: 68px !important;
+}
+button[onmousedown*="convertSelectedQuestionImageRight"] {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  width: 58px !important;
+  min-width: 58px !important;
+  flex-basis: 58px !important;
+}
+</style>
+
+
+<style id="lhl-v38-bank-row-final-fit">
+button[onmousedown*="openConvertFileDialog"] {
+  width: 92px !important;
+  min-width: 92px !important;
+  max-width: 92px !important;
+  flex-basis: 92px !important;
+  font-size: 11px !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+button[onmousedown*="mergeAnswerExcelFiles"] {
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 68px !important;
+  flex-basis: 68px !important;
+}
+button[onmousedown*="convertSelectedQuestionImageRight"] {
+  width: 54px !important;
+  min-width: 54px !important;
+  max-width: 54px !important;
+  flex-basis: 54px !important;
+}
+button[onmousedown*="openGoogleScriptSettingDialog"] {
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  flex-basis: 72px !important;
+}
+</style>
+
+
+<style id="lhl-v39-right-edge-final-align">
+button[onmousedown*="openGoogleScriptSettingDialog"] {
+  width: 84px !important;
+  min-width: 84px !important;
+  max-width: 84px !important;
+  flex-basis: 84px !important;
+}
+button[onmousedown*="openQuestionBankDialog"] {
+  width: 92px !important;
+  min-width: 92px !important;
+  max-width: 92px !important;
+  flex-basis: 92px !important;
+}
+</style>
+
+</head>
+<body>
+    <div id="lhl-online-banner" style="position:fixed;right:10px;bottom:10px;z-index:99999;background:rgba(11,49,66,.92);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:7px 10px;font:12px Arial;box-shadow:0 4px 14px rgba(0,0,0,.25);">LHL Tool Online Alpha – lõi V82</div>
+    <div id="app-content">
+        <div id="editor-container">
+            <div id="tab-bar"></div>
+            
+            <div class="top-controls">
+                <div class="row" style="display: flex; gap: 4px; width: 100%;">
+                    <button id="btn-toggle" class="btn-main" onmousedown="event.preventDefault(); toggleImageCode();">🙈 Thu gọn</button>
+                    <button class="btn-main btn-select-all" onmousedown="event.preventDefault(); selectAllText();">⏏️ Tất Cả</button>
+                    <button class="btn-main btn-copy" onmousedown="event.preventDefault(); copyText();">📋 Copy</button>
+                    <button class="btn-main btn-cut" onmousedown="event.preventDefault(); cutText();">✂️ Cắt</button>
+                    <button class="btn-main btn-paste" onmousedown="event.preventDefault(); pasteText();">📥 Paste</button>
+                    <button class="btn-main btn-delete" onmousedown="event.preventDefault(); deleteText();">❌ Xóa</button>
+                    <button class="btn-main btn-undo" onmousedown="event.preventDefault(); undoAction();">↩️ Undo</button>
+                    <button class="btn-main btn-redo" onmousedown="event.preventDefault(); redoAction();">↪️ Redo</button>
+                </div>
+                
+                <div class="row" style="display: flex; gap: 4px; width: 100%;">
+                    <button class="btn-main btn-open-saved" onmousedown="event.preventDefault(); openSavedHTML();" style="flex: 1;" title="Mở file HTML đã lưu">📂 Mở File</button>
+                    <button class="btn-main btn-save-html" onmousedown="event.preventDefault(); performSave();" style="flex: 1;" title="Lưu lại toàn bộ nội dung">💾 Lưu File</button>
+                    <button class="btn-main btn-new-tab" onmousedown="event.preventDefault(); createNewTab();" style="flex: 1;" title="Tạo Thẻ (Tab) soạn thảo mới">➕ Tab Mới</button>
+                    
+                    <select id="font-select" class="btn-main select-3d" style="height: 26px; padding: 0px 4px; margin: 0; flex: 1; min-width: 0; background: #3949ab; color: white; cursor: pointer;" onchange="applyFont(this.value)" title="Đổi font cho khối văn bản được bôi đen">
+                        <option value="">🔤 Font</option><option value="Times New Roman">Times</option><option value="Cambria">Cambria</option><option value="Garamond">Garamond</option><option value="Georgia">Georgia</option><option value="Palatino Linotype">Palatino</option><option value="Arial">Arial</option><option value="Tahoma">Tahoma</option><option value="Verdana">Verdana</option><option value="Courier New">Courier</option><option value="Roboto">Roboto</option>
+                    </select>
+
+                    <div style="display: flex; align-items: center; justify-content: center; background: #3949ab; border-radius: 5px; height: 26px; padding: 0 4px; box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); border-bottom: 3px solid rgba(0,0,0,0.3); font-size: 13px; font-weight: bold; cursor: pointer; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);" title="Chọn màu chữ (Áp dụng vùng bôi đen)">
+                        <span style="margin-right: 2px;">🎨</span>
+                        <input type="color" id="text-color-input" style="width: 20px; height: 20px; padding: 0; border: none; background: transparent; cursor: pointer; outline: none;" value="#ff0000" onchange="applyColor(this.value)">
+                    </div>
+
+                    <button class="btn-main btn-format" onmousedown="event.preventDefault(); toggleFormat('<b>', '</b>');" style="font-weight: 900; font-size: 13px; flex: 0.5;">B</button>
+                    <button class="btn-main btn-format" onmousedown="event.preventDefault(); toggleFormat('<i>', '</i>');" style="font-style: italic; font-size: 13px; font-family: serif; flex: 0.5;">I</button>
+                    <button class="btn-main btn-format" onmousedown="event.preventDefault(); toggleFormat('<u>', '</u>');" style="text-decoration: underline; font-size: 13px; flex: 0.5;">U</button>
+                    <button class="btn-main btn-align-left" onmousedown="event.preventDefault(); toggleFormat('<div style=\'text-align: left;\'> ', ' </div>', true);" style="flex: 1;">⫷ Trái</button>
+                    <button class="btn-main btn-align-center" onmousedown="event.preventDefault(); toggleFormat('<div style=\'text-align: center;\'> ', ' </div>', true);" style="flex: 1;">≣ Giữa</button>
+                    <button class="btn-main btn-align-right" onmousedown="event.preventDefault(); toggleFormat('<div style=\'text-align: right;\'> ', ' </div>', true);" style="flex: 1;">⫸ Phải</button>
+                </div>
+
+                <div class="row" style="display: flex; gap: 4px; width: 100%;">
+                    <button class="btn-main" onmousedown="event.preventDefault(); resetEditor();" style="background: #e53935; flex: 1;">🔄 Mẫu Sở</button>
+                    <button class="btn-main" onmousedown="event.preventDefault(); resetToChuyenDe();" style="background: #fb8c00; flex: 1.2;" title="Tạo Mẫu Chuyên Đề">🔄 Mẫu C.Đề</button>
+                    <button class="btn-main btn-del-header" onmousedown="event.preventDefault(); removeHeader();" style="flex: 1;">🗑️ Xóa Đầu</button>
+                    <button class="btn-main" onmousedown="event.preventDefault(); importHTML();" style="flex: 1;">📥 Nhập Đề</button>
+                    <button class="btn-main btn-word" onmousedown="event.preventDefault(); convertWordToHtml();" style="flex: 1.5;" title="Chuyển mã copy từ Word sang cấu trúc chuẩn">🔄 Chuyển Word</button>
+                    <button class="btn-main btn-latex-ex" onmousedown="event.preventDefault(); convertLatexExToHtml();" style="flex: 1.25;" title="Chuẩn hóa LaTeX dạng ex sang HTML">🧮 EX → HTML</button>
+                    <button id="btn-toggle-answer-solution" class="btn-main btn-hide-answer" onmousedown="event.preventDefault(); toggleAnswerSolutionVisibility();" style="flex: 1.25;" title="Ẩn/hiện đáp án đúng và lời giải">🙈 Ẩn ĐA/LG</button>
+                    <button class="btn-main btn-clean-code" onmousedown="event.preventDefault(); cleanCode();" style="flex: 1.2;">✨ Chuẩn Hóa</button>
+            
+                </div>
+                
+                <div class="row" style="display: flex; gap: 6px; width: 100%; align-items: center; flex-wrap: nowrap;">
+                    <div class="control-group" style="flex: 0 0 auto; height: 26px;">
+                        <button class="btn-icon" onmousedown="event.preventDefault(); zoomOut();">-</button>
+                        <input type="text" id="zoom-level" class="val-input" style="width: 40px;" value="100%" ondblclick="resetZoom()">
+                        <button class="btn-icon" onmousedown="event.preventDefault(); zoomIn();">+</button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; flex: 0 0 auto; background: #3949ab; color: white; border-radius: 5px; height: 26px; padding: 0 6px; box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); border-bottom: 3px solid rgba(0,0,0,0.3); font-size: 11px; font-weight: bold; cursor: text;" title="Nhập số để đổi cỡ chữ">
+                        <span style="margin-right: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);">Size</span><input type="number" id="font-size-input" style="width: 34px; background: transparent; color: white; border: none; outline: none; font-size: 13px; font-weight: bold; text-align: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);" value="17" onchange="applyFontSize(this.value)" onkeydown="if(event.key==='Enter') { applyFontSize(this.value); this.blur(); }">
+                    </div>
+                    
+                    <div style="display: flex; gap: 4px; align-items: center; flex: 1; overflow: hidden;">
+                        <select id="jump-section" class="select-3d" style="height: 26px; padding: 2px 4px; flex: 1; min-width: 50px;">
+                            <option value="ALL">Tất cả</option>
+                            <option value="I">Phần I</option>
+                            <option value="II">Phần II</option>
+                            <option value="III">Phần III</option>
+                        </select>
+                        <input type="number" id="jump-number" placeholder="Câu..." style="width: 45px; flex: none; background: #2d2d30; color: #fff; border: 1px solid #555; border-radius: 4px; font-weight: bold; font-size: 11px; text-align: center; outline: none; padding: 3px; height: 26px;" onkeydown="if(event.key === 'Enter') jumpToQuestionNumber()">
+                        <button onmousedown="event.preventDefault(); jumpToQuestionNumber();" class="btn-main" style="background:#0288d1; min-width: 35px; flex: none; padding: 2px 6px; margin: 0; font-size: 11px; height: 26px;">Go ➔</button>
+                        <button onmousedown="event.preventDefault(); applySpacingToQuestion();" class="btn-main" style="background:#e91e63; min-width: 45px; flex: none; padding: 2px 6px; margin: 0; font-size: 11px; height: 26px;">↕️ Giãn</button>
+                        <button onmousedown="event.preventDefault(); applyFormatPainter();" class="btn-main" style="background:#00897b; min-width: 80px; flex: none; padding: 2px 6px; margin: 0; font-size: 11px; height: 26px;">🖌️ Tương Tự</button>
+                        <button onmousedown="event.preventDefault(); clearQuestionFormatting();" class="btn-main" style="background:#5d4037; min-width: 95px; flex: none; padding: 2px 6px; margin: 0; font-size: 11px; height: 26px;">🧹 Reset Đ.Dạng</button>
+                        <button onmousedown="event.preventDefault(); renumberQuestions();" class="btn-main btn-renumber" style="min-width: 80px; flex: none; padding: 2px 6px; margin: 0; font-size: 11px; height: 26px;">🔢 Reset Câu</button>
+                    </div>
+                </div>
+
+                <div class="row" style="display: flex; gap: 6px; width: 100%; align-items: center;">
+                    <div id="q-stats" style="display: flex; gap: 4px; align-items: center; flex: 1;">
+                        <span class="stat-badge stat-total">Tổng: 0</span><span class="stat-badge stat-tn">TN: 0</span><span class="stat-badge stat-ds">Đ/S: 0</span><span class="stat-badge stat-tln">TLN: 0</span>
+                    </div>
+                    <button class="btn-main" onmousedown="event.preventDefault(); resetToTieuDe();" style="background: #1976d2; flex: unset; padding: 6px 10px; min-width: unset;" title="Tạo tiêu đề theo mẫu sở, chỉ giữ phần header trên">📌 Tiêu đề</button>
+                    <button class="btn-main btn-tikz-render" onmousedown="event.preventDefault(); lhlTikzOnlineSvgButton();" style="background: #00897b; flex: 0 0 70px; width: 70px; min-width: 70px; height: 30px; padding: 0 6px; margin: 0; font-size: 11px;" title="Render TikZ Online sang SVG chất lượng cao">TikZ SVG</button><button class="btn-main btn-tikz-api-config-compact" onmousedown="event.preventDefault(); lhlTikzOpenApiConfigDialog();" style="background:#00695c; flex:0 0 34px; width:34px; min-width:34px; height:30px; padding:0 4px; margin:0; font-size:13px;" title="Cấu hình API TikZ Online">⚙️</button>
+                    <button class="btn-main btn-inpdf-compact" onmousedown="event.preventDefault(); downloadHTML();" style="background: #9c27b0; flex: 0 0 76px; width: 76px; min-width: 76px; height: 30px; padding: 0 6px; margin: 0; font-size: 11px;" title="In trực tiếp ra bản PDF không cần lưu">⬇️ IN PDF</button>
+                    <button class="btn-main btn-interactive-compact" onmousedown="event.preventDefault(); convertToInteractivePractice();" style="background: #00acc1; flex: 0 0 80px; width: 80px; min-width: 80px; max-width: 80px; height: 30px; padding: 0 4px; margin: 0; font-size: 11px;" title="Biến file hiện hành thành đề tương tác có đồng hồ đếm ngược">🎮 Tương tác</button>
+                    <button onmousedown="event.preventDefault(); toggleLock();" class="btn-main btn-lock-compact" style="background:#455a64; flex: 0 0 60px; width: 60px; min-width: 60px; max-width: 60px; padding: 0 4px; margin: 0; font-size: 11px; height: 30px; box-sizing: border-box;">🔒 Khóa</button>
+                    <button onmousedown="event.preventDefault(); performSaveAs();" class="btn-main btn-save-as" style="flex: 0 0 68px; width: 68px; min-width: 68px; max-width: 68px; padding: 0 3px; margin: 0; font-size: 10.5px; height: 30px; box-sizing: border-box;">💾 Save As</button>
+                </div>
+                
+                <div class="row" style="display: flex; gap: 3px; width: 100%; margin-top: 6px; align-items: center; flex-wrap: nowrap; overflow: hidden; box-sizing: border-box;">
+                    <div class="author-3d" style="width: 322px; flex: 0 0 322px; min-width: 0; max-width: 322px; background: linear-gradient(145deg, #009688, #00695c); padding: 4px 6px; border-radius: 4px; box-shadow: 3px 3px 6px rgba(0,0,0,0.3), -1px -1px 3px rgba(255,255,255,0.1); display: flex; align-items: center; gap: 5px; box-sizing: border-box;">
+                        <span style="color: #fff; font-size: 11px; font-weight: bold; white-space: nowrap;">✍️ Tác giả:</span>
+                        <input type="text" id="author-input" value="ThS.Lê Hoàng Lâm - 0978045921" style="width: 242px; flex: 0 0 242px; min-width: 0; background: rgba(0,0,0,0.22); color: #fff; border: none; border-radius: 3px; padding: 2px 4px; font-weight: bold; font-size: 11px; outline: none; text-align: center; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); box-sizing: border-box;">
+                    </div>
+                    <div class="author-3d page-start-3d" style="width: 94px; flex: 0 0 94px; min-width: 94px; max-width: 94px; height: 30px; padding: 2px 4px; display: flex; align-items: center; justify-content: center; gap: 3px; margin: 0; box-sizing: border-box;">
+                        <span style="color: #fff; font-size: 10.5px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); white-space: nowrap;">🔢 Trang:</span>
+                        <input type="number" id="start-page-input" value="1" min="1" max="999" style="width: 48px; height: 22px; background: rgba(0,0,0,0.25); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; font-weight: 900; font-size: 12px; padding: 1px 2px; outline: none; text-align: center; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); box-sizing: border-box;">
+                    </div>
+                    <button class="btn-main" onmousedown="event.preventDefault(); mergeAnswerExcelFiles();" style="background:#1565c0; flex:0 0 68px; width:68px; min-width:68px; max-width:68px; height:30px; padding:0 2px; margin:0; font-size:10.2px; white-space:nowrap; box-sizing:border-box; font-family:\'Segoe UI\', Tahoma, Arial, sans-serif; font-weight:700; letter-spacing:0; line-height:1;" title="Gộp nhiều file bảng đáp án Excel/PDF">📊 Gộp file</button>
+                    <button class="btn-main" onmousedown="event.preventDefault(); openConvertFileDialog();" style="background:linear-gradient(#26c6da,#00838f); flex:0 0 92px; width:92px; min-width:92px; max-width:92px; height:30px; padding:0 4px; margin:0; font-size:11px; white-space:nowrap; box-sizing:border-box; font-family:\'Segoe UI\', Tahoma, Arial, sans-serif; font-weight:700; letter-spacing:0; line-height:1;" title="Chuyển PDF/Word sang HTML LaTeX bằng Gemini">🤖 Chuyển file</button>
+                    <button class="btn-main btn-image-right" onmousedown="event.preventDefault(); convertSelectedQuestionImageRight();" style="background:#6a1b9a; flex:0 0 54px; width:54px; min-width:54px; max-width:54px; height:30px; padding:0 2px; margin:0; font-size:10.4px; white-space:nowrap; box-sizing:border-box; font-family:\'Segoe UI\', Tahoma, Arial, sans-serif; font-weight:700; line-height:1;" title="Đưa hình trong câu đang bôi đen sang bên phải nội dung câu hỏi">🖼️ Hình</button>
+                    <button class="btn-main" onmousedown="event.preventDefault(); openGoogleScriptSettingDialog();" style="background:#2e7d32; flex:0 0 60px; width:60px; min-width:60px; max-width:60px; height:30px; padding:0 2px; margin:0; font-size:10px; white-space:nowrap; box-sizing:border-box; font-family:\'Segoe UI\', Tahoma, Arial, sans-serif; font-weight:700; letter-spacing:0; line-height:1;" title="Cài đặt link Google Apps Script để tự gom điểm về Google Sheet">G.Sheet</button>
+                </div>
+            </div>
+            
+            <div class="search-box">
+                <div class="search-row" style="gap: 6px; display: flex; align-items: center; width: 100%; flex-wrap: nowrap;">
+                    <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm..." onkeydown="if(event.key === 'Enter') findNext()" style="flex: 1 1 40%; min-width: 150px; height: 30px; box-sizing: border-box;">
+                    <button onmousedown="event.preventDefault(); findNext();" style="padding: 0 9px; height: 30px; min-width: 56px;">Tìm ⬇️</button>
+                    <input type="text" id="replaceInput" placeholder="✏️ Thay thế..." style="flex: 1 1 40%; min-width: 150px; height: 30px; box-sizing: border-box;">
+                    <button onmousedown="event.preventDefault(); replaceCurrent();" class="btn-replace" style="padding: 0 9px; height: 30px; min-width: 56px;">Thay</button>
+                    <button onmousedown="event.preventDefault(); replaceAll();" class="btn-replace-all" style="padding: 0 9px; height: 30px; min-width: 58px;">Tất cả</button>
+                    <button class="btn-main" onmousedown="event.preventDefault(); openMixExamDialog();" style="background: #7b1fa2; flex: 0 0 auto; min-width: 68px; height: 30px; padding: 0 8px; margin: 0; font-size: 11px; white-space: nowrap;" title="Trộn nhiều mã đề từ file HTML hiện hành">🔀 Trộn đề</button>
+                    <button class="btn-main" onmousedown="event.preventDefault(); openQuestionBankDialog();" style="background:#2e7d32; flex:0 0 92px; width:92px; min-width:92px; max-width:92px; height:30px; padding:0 5px; margin:0; font-size:11px; white-space:nowrap; box-sizing:border-box; font-family:\'Segoe UI\', Tahoma, Arial, sans-serif; font-weight:700; letter-spacing:0; line-height:1;" title="Lưu, xem và chèn câu hỏi từ ngân hàng">🏦 Ngân hàng</button>
+                </div>
+            </div>
+
+            <textarea id="editor" placeholder="Thầy vui lòng tạo Tab mới (Mẫu Sở, C.Đề...) để bắt đầu soạn thảo ạ!" disabled></textarea>
+        </div>
+        <div class="resizer" id="dragMe"></div>
+        <div id="preview-container"><div id="paper"></div></div>
+    </div>
+    
+    <div id="toast-notification" class="toast"></div>
+
+    <div id="save-confirm-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(2px);">
+        <div class="dialog-box-3d">
+            <h3 style="margin-top:0; color:#03a9f4; font-size:16px; border-bottom:1px solid #3e3e42; padding-bottom:10px; display:flex; align-items:center; gap:8px;">
+                <span style="font-size: 20px;">💾</span> Phần mềm soạn Toán - Lưu File
+            </h3>
+            <p id="save-confirm-msg" style="color:#fff; font-size:14px; margin:20px 0; line-height: 1.5;"></p>
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top: 25px;">
+                <button onclick="cancelClose()" class="btn-dialog btn-dialog-cancel">Hủy</button>
+                <button onclick="dontSaveAndClose()" class="btn-dialog btn-dialog-dontsave">Không lưu</button>
+                <button onclick="confirmSaveAndClose()" class="btn-dialog btn-dialog-save">Lưu file</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-confirm-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(2px);">
+        <div class="dialog-box-3d">
+            <h3 style="margin-top:0; color:#03a9f4; font-size:16px; border-bottom:1px solid #3e3e42; padding-bottom:10px; display:flex; align-items:center; gap:8px;">
+                <span style="font-size: 20px;">⚠️</span> Phần mềm soạn Toán - Thông báo
+            </h3>
+            <p id="custom-confirm-msg" style="color:#fff; font-size:14px; margin:20px 0; line-height: 1.5;"></p>
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top: 25px;">
+                <button onclick="closeCustomConfirm(false)" class="btn-dialog btn-dialog-cancel">Hủy</button>
+                <button onclick="closeCustomConfirm(true)" class="btn-dialog btn-dialog-confirm" style="background:#e53935;">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="online-shim.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>

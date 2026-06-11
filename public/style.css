@@ -1,0 +1,1894 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
+        
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; box-sizing: border-box; background: #1e1e1e; font-family: Arial, Tahoma, sans-serif; }
+        *, *::before, *::after { box-sizing: inherit; }
+        #app-content { display: flex; flex: 1; width: 100%; height: 100%; }
+        #editor-container { width: 45%; height: 100%; flex: none; display: flex; flex-direction: column; background: #1e1e1e; min-width: 440px; }
+        .resizer { width: 6px; height: 100%; background: #333; cursor: col-resize; flex: none; z-index: 10; transition: background 0.2s; }
+        .resizer:hover, .resizer:active { background: #0078d7; }
+        
+        /* TAB BAR */
+        #tab-bar { display: flex; background: #202020; padding-top: 6px; border-bottom: 2px solid #03a9f4; overflow-x: auto; overflow-y: hidden; flex-shrink: 0; }
+        #tab-bar::-webkit-scrollbar { height: 4px; }
+        #tab-bar::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+        .tab-item { background: #3e3e42; color: #aaa; padding: 6px 14px; margin: 0 3px 0 0; border-radius: 8px 8px 0 0; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; border: 1px solid #2a2a2a; border-bottom: none; max-width: 180px; min-width: 100px; transition: background 0.1s; }
+        .tab-item:hover { background: #4a4a4f; }
+        .tab-item.active { background: #1e1e1e; color: #fff; border-top: 2px solid #03a9f4; border-left: 1px solid #03a9f4; border-right: 1px solid #03a9f4; margin-bottom: -2px; padding-bottom: 8px; }
+        .tab-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+        .tab-close { margin-left: 8px; font-weight: bold; border-radius: 50%; width: 16px; height: 16px; text-align: center; line-height: 14px; transition: 0.1s; }
+        .tab-close:hover { background: #e53935; color: white; }
+        .tab-add { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-left: 5px; margin-bottom: 2px; border-radius: 50%; color: #aaa; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.1s; }
+        .tab-add:hover { background: #555; color: #fff; }
+
+        /* THANH CÔNG CỤ XỊN XÒ */
+        .top-controls { display: flex; flex-direction: column; gap: 8px; padding: 10px 10px 5px 10px; background: #03a9f4; align-items: stretch; z-index: 5; }
+        .btn-main { flex: 1; min-width: 40px; padding: 6px 2px; border: none; cursor: pointer; font-weight: bold; font-size: 11px; border-radius: 5px; color: white; background: #8e24aa; transition: 0.1s; display: flex; align-items: center; justify-content: center; text-align: center; white-space: nowrap; border-bottom: 3px solid rgba(0,0,0,0.3); box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); text-shadow: 1px 1px 2px rgba(0,0,0,0.4); }
+        
+        /* CLASS HIỆU ỨNG NHÚN NHẢY VẬT LÝ */
+        .btn-pressed { transform: translateY(2px) !important; border-bottom: 1px solid rgba(0,0,0,0.3) !important; transition: none !important; }
+        
+        .btn-format { background: #5e35b1 !important; } .btn-format:hover { background: #673ab7 !important; }
+        .btn-align-left { background: #00897b !important; } .btn-align-left:hover { background: #00796b !important; }
+        .btn-align-center { background: #f57c00 !important; } .btn-align-center:hover { background: #ef6c00 !important; }
+        .btn-align-right { background: #3949ab !important; } .btn-align-right:hover { background: #303f9f !important; }
+        .btn-new-tab { background: #6a1b9a !important; } .btn-new-tab:hover { background: #7b1fa2 !important; }
+        .btn-word { background: #00acc1 !important; } .btn-word:hover { background: #00897b !important; }
+        .btn-latex-ex { background: #7b1fa2 !important; } .btn-latex-ex:hover { background: #8e24aa !important; }
+        .btn-hide-answer { background: #5d4037 !important; } .btn-hide-answer:hover { background: #6d4c41 !important; }
+        .btn-select-all { background: #3949ab !important; } .btn-select-all:hover { background: #3f51b5 !important; }
+        .btn-copy { background: #00897b !important; } .btn-copy:hover { background: #009688 !important; }
+        .btn-cut { background: #d84315 !important; } .btn-cut:hover { background: #ef6c00 !important; }
+        .btn-paste { background: #43a047 !important; } .btn-paste:hover { background: #4caf50 !important; }
+        .btn-delete { background: #e53935 !important; } .btn-delete:hover { background: #ef5350 !important; }
+        .btn-undo { background: #607d8b !important; } .btn-undo:hover { background: #78909c !important; }
+        .btn-redo { background: #546e7a !important; } .btn-redo:hover { background: #62808e !important; }
+        .btn-blank { background: #455a64 !important; } .btn-blank:hover { background: #546e7a !important; }
+        .btn-del-header { background: #d81b60 !important; } .btn-del-header:hover { background: #e91e63 !important; }
+        .btn-open-saved { background: #0288d1 !important; } .btn-open-saved:hover { background: #039be5 !important; }
+        .btn-save-html { background: #2e7d32 !important; } .btn-save-html:hover { background: #388e3c !important; }
+        .btn-save-as { background: #00695c !important; } .btn-save-as:hover { background: #00897b !important; }
+        .btn-clean-code { background: #f57c00 !important; } .btn-clean-code:hover { background: #fb8c00 !important; }
+        .btn-renumber { background: #e65100 !important; } .btn-renumber:hover { background: #ef6c00 !important; } 
+        
+        .control-group { display: flex; align-items: center; background: rgba(0,0,0,0.15); border-radius: 4px; height: 26px; flex: none; justify-content: center; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .btn-icon { background: #8e24aa; color: white; border: none; cursor: pointer; width: 22px; font-size: 12px; font-weight: bold; height: 100%; transition: 0.1s; border-bottom: 2px solid rgba(0,0,0,0.3); box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); text-shadow: 1px 1px 2px rgba(0,0,0,0.4); }
+        .btn-icon:hover { background: #ab47bc; }
+        .val-input { width: 40px; text-align: center; color: #fff; font-weight: bold; font-size: 12px; background: transparent; border: none; outline: none; }
+        
+        .stat-badge { padding: 5px 8px; border-radius: 5px; color: white; font-weight: bold; font-size: 11px; display: inline-block; white-space: nowrap; border-bottom: 3px solid rgba(0,0,0,0.3); box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); text-shadow: 1px 1px 2px rgba(0,0,0,0.4); }
+        .stat-total { background: #1976d2; } .stat-tn { background: #00897b; } .stat-ds { background: #f57c00; } .stat-tln { background: #d81b60; }   
+        
+        .select-3d { background: #3949ab; color: #fff; border: none; border-bottom: 3px solid rgba(0,0,0,0.3); border-radius: 5px; font-weight: bold; font-size: 11px; outline: none; padding: 2px 4px; height: 26px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); cursor: pointer; transition: 0.1s; }
+        .select-3d option { background: #1e1e1e; font-weight: bold; color: white; }
+        
+        .author-3d { display: flex; align-items: center; background: #00897b; border-radius: 5px; height: 28px; width: 100%; border-bottom: 3px solid rgba(0,0,0,0.3); box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); padding: 0 10px; box-sizing: border-box; transition: 0.1s; }
+        
+        /* TÌM KIẾM */
+        .search-box { display: flex; flex-direction: column; padding: 5px 10px 10px 10px; background: #03a9f4; border-bottom: 2px solid #0288d1; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 4; }
+        .search-row { display: flex; gap: 4px; width: 100%; align-items: center; flex-wrap: nowrap; }
+        .search-row input { flex: 1; background: #1e1e1e; color: #fff; border: 1px solid #555; padding: 4px 6px; font-size: 11px; height: 26px; border-radius: 4px; outline: none; box-sizing: border-box; min-width: 50px; }
+        .search-row button { background: #8e24aa; color: white; border: none; padding: 0 8px; font-size: 11px; height: 26px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.1s; white-space: nowrap; border-bottom: 3px solid rgba(0,0,0,0.3); box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); text-shadow: 1px 1px 2px rgba(0,0,0,0.4); }
+        .search-row button:hover { background: #ab47bc; }
+        .btn-replace { background: #00897b !important; } .btn-replace:hover { background: #26a69a !important; }
+        .btn-replace-all { background: #e53935 !important; } .btn-replace-all:hover { background: #ef5350 !important; }
+        
+        ::selection { background: #03a9f4; color: #fff; }
+        
+        /* EDITOR & PREVIEW */
+        textarea { flex: 1; padding: 15px; background: #1e1e1e; color: #d4d4d4; font-family: Consolas, monospace; font-size: 15px; border: none; outline: none; resize: none; line-height: 1.5; white-space: pre-wrap; word-break: break-word; overflow-x: hidden; overflow-y: auto; margin: 0; }
+        textarea:disabled { background: #181818; color: #777; cursor: not-allowed; }
+        
+        #preview-container { flex: 1; height: 100%; background: #525659; overflow-y: auto; padding: 30px; position: relative; min-width: 300px; }
+        #paper { background: white; margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.5); font-family: 'Times New Roman', Times, serif; line-height: 1.3; color: #000; width: 210mm; min-height: 297mm; padding: 10mm 8mm; box-sizing: border-box; font-size: 17px; text-align: justify; transition: zoom 0.1s; transform-origin: top center; }
+        
+        #paper p { margin: 1px 0; }
+        #paper .section-title { margin-top: 12px !important; margin-bottom: 12px !important; text-align: justify; font-size: inherit !important; }
+        #paper .section-title b { font-weight: bold !important; font-size: inherit !important; }
+        #paper .question { margin-top: 6px; margin-bottom: 2px; text-align: justify; }
+        #paper .choices { display: flex; flex-wrap: wrap; margin-bottom: 2px; align-items: baseline; width: 100%; padding-left: 25px; box-sizing: border-box; }
+        #paper .choices.cols-4 .choice { width: 25%; } #paper .choices.cols-2 .choice { width: 50%; } #paper .choices.cols-1 .choice { width: 100%; }
+        #paper .choice { box-sizing: border-box; padding-right: 5px; margin-bottom: 1px; }
+        #paper .tf-choices { margin-left: 20px; margin-bottom: 5px; } #paper .tf-choices p { margin: 2px 0; }
+        #paper .solution { margin: 6px 0 8px 0; padding-left: 0; border-left: none; }
+        #paper .correct-choice { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.2px; }
+        #paper.hide-answer-solution .solution { display: none !important; }
+        #paper.hide-answer-solution .correct-choice { text-decoration: none !important; }
+        
+        #paper table { margin-left: auto; margin-right: auto; }
+        #paper .header-container { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; font-size: 88%; }
+        #paper .header-left { width: 40%; text-align: center; white-space: nowrap; }
+        #paper .header-right { width: 60%; text-align: center; white-space: nowrap; }
+        #paper .student-info-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 10px; white-space: nowrap; width: 100%;}
+        #paper .student-info-container > div:first-child { flex: 1; overflow: hidden; }
+        #paper .exam-code-box { border: 1.5px solid #000; padding: 3px 10px; font-weight: bold; font-size: 0.85em; margin-left: auto; }
+        #paper .exam-part-box { display: block; width: fit-content; max-width: 100%; clear: both; border: 2px solid #0b3142; border-radius: 5px; padding: 5px 8px; margin: 14px 0 15px 0; font-weight: bold; font-size: 0.95em; line-height: 1.35; text-align: left; box-sizing: border-box; }
+        #paper .exam-part-box-wide { max-width: 96%; }
+        #paper .exam-end-line { text-align: center; margin-top: 26px; font-weight: bold; }
+        #paper .exam-final-note { text-align: center; margin-top: 10px; font-size: 0.95em; }
+
+        /* TOAST & DIALOG */
+        .toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 6px; padding: 12px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0px 4px 6px rgba(0,0,0,0.3); font-size: 14px; font-weight: bold; opacity: 0; transition: opacity 0.5s, bottom 0.5s; }
+        .toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+        .dialog-box-3d { background: #2d2d30; border-radius: 8px; padding: 20px; width: 450px; max-width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1), 0 0 0 1px #03a9f4; animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .btn-dialog { padding: 8px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px; color: white; transition: 0.1s; border-bottom: 3px solid rgba(0,0,0,0.4); box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-family: Arial, Tahoma, sans-serif; }
+        .btn-dialog:active { transform: translateY(2px); border-bottom: 1px solid rgba(0,0,0,0.4); box-shadow: 0 2px 3px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2); }
+        .btn-dialog-cancel { background: #546e7a; } .btn-dialog-cancel:hover { background: #62808e; }
+        .btn-dialog-dontsave { background: #f57c00; } .btn-dialog-dontsave:hover { background: #ef6c00; }
+        .btn-dialog-save { background: #4caf50; } .btn-dialog-save:hover { background: #43a047; }
+
+
+/* Tối ưu hiển thị đáp án đúng: chỉ gạch chân nhãn A./B./C./D. */
+#paper .correct-choice{
+    text-decoration: none !important;
+}
+#paper .correct-choice b{
+    text-decoration: underline !important;
+    text-underline-offset: 3px;
+}
+
+/* Chế độ ẩn đáp án/lời giải */
+.hide-answer-mode .solution,
+#paper.hide-answer-solution .solution{
+    display: none !important;
+}
+.hide-answer-mode .correct-choice b,
+#paper.hide-answer-solution .correct-choice b{
+    text-decoration: none !important;
+}
+
+/* Hình TikZ được render từ LaTeX */
+#paper .tikz-image-wrap{
+    text-align: center;
+    margin: 10px 0;
+}
+#paper .tikz-image{
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+#paper .tikz-render-error{
+    color: #b71c1c;
+    background: #fff3f3;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: 8px 0;
+    font-family: Arial, Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+/* LaTeX \immini{...}{hình}: nội dung bên trái, hình bên phải */
+#paper .immini-wrap{
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    width: 100%;
+    margin: 2px 0 8px 0;
+}
+#paper .immini-text{
+    flex: 1 1 auto;
+    min-width: 0;
+}
+#paper .immini-figure{
+    flex: 0 0 38%;
+    text-align: center;
+}
+#paper .immini-figure .tikz-image-wrap{
+    margin: 0;
+}
+#paper .immini-figure img,
+#paper .immini-figure svg{
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* Cho nhãn Câu X. nằm cùng dòng với nội dung đề khi dùng LaTeX \immini */
+#paper .immini-text > b:first-child{
+    display: inline !important;
+    margin-right: 4px;
+}
+.immini-wrap{
+    align-items: flex-start !important;
+}
+
+.immini-figure{
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.immini-figure img,
+.tikz-image{
+    margin-top: 0 !important;
+    display: block;
+}
+.short-answer{
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid #ff0000;
+    background: #fff59d;
+    color: red;
+    font-weight: bold;
+    margin-top: 6px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.short-answer span{
+    padding: 3px 8px;
+    border-right: 1px solid #ff0000;
+}
+
+.short-answer span:last-child{
+    border-right: none;
+}
+
+.short-answer-cell{
+    min-width: 24px;
+    min-height: 22px;
+}
+.section-title{
+    font-size: 22px;
+    font-weight: bold;
+    margin: 18px 0 12px;
+    text-align: justify;
+}
+
+.section-title b{
+    font-weight: bold;
+}
+/* Ẩn đáp án phần III khi bật chế độ ẩn ĐA/LG */
+.hide-answer-mode .short-answer,
+#paper.hide-answer-solution .short-answer{
+    display: none !important;
+}
+
+/* Ô đáp án phần III: chống tràn ô, gọn giống LaTeX */
+.short-answer{
+    max-width: max-content;
+    white-space: nowrap;
+}
+.short-answer-label{
+    flex: 0 0 auto;
+}
+.short-answer-box{
+    min-width: 34px;
+    text-align: center;
+    white-space: nowrap;
+}
+.latex-table{
+    border-collapse: collapse;
+    margin: 8px auto;
+    text-align: center;
+    font-size: inherit;
+}
+
+.latex-table td,
+.latex-table th{
+    border: 1px solid #000;
+    padding: 3px 10px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.tikz-image{
+    filter: contrast(1.45) brightness(0.85);
+}
+
+
+/* Ẩn gạch chân đáp án đúng dạng <u> trong các lựa chọn khi bật Ẩn ĐA/LG */
+.hide-answer-mode .choices u,
+#paper.hide-answer-solution .choices u,
+.hide-answer-mode .tf-choices u,
+#paper.hide-answer-solution .tf-choices u{
+    text-decoration: none !important;
+}
+
+
+/* V69 FIX IN PDF: không cho Câu 1 chạy cùng dòng tiêu đề PHẦN */
+@media print {
+  .exam-part-box,
+  .section-title {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .exam-part-box + *,
+  .section-title + *,
+  .lhl-print-part-break + * {
+    clear: both !important;
+  }
+  .lhl-print-part-break {
+    display: block !important;
+    clear: both !important;
+    width: 100% !important;
+    height: 0 !important;
+    line-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .question-line,
+  .part1-question-block,
+  .part3-question-block {
+    clear: both !important;
+  }
+}
+.exam-part-box,
+.section-title {
+  display: block !important;
+  clear: both !important;
+}
+.lhl-print-part-break {
+  display: block !important;
+  clear: both !important;
+  width: 100% !important;
+  height: 0 !important;
+  line-height: 0 !important;
+}
+
+
+/* V70 FIX IN PDF: khung tiêu đề PHẦN co vừa nội dung, không kéo full dòng */
+@media print {
+  .exam-part-box,
+  .section-title {
+    display: table !important;
+    width: auto !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    white-space: normal !important;
+  }
+  .exam-part-box + *,
+  .section-title + *,
+  .lhl-print-part-break + * {
+    clear: both !important;
+  }
+  .lhl-print-part-break {
+    display: block !important;
+    clear: both !important;
+    width: 100% !important;
+    height: 0 !important;
+    line-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .question-line,
+  .part1-question-block,
+  .part3-question-block {
+    clear: both !important;
+  }
+}
+.exam-part-box,
+.section-title {
+  display: table !important;
+  width: auto !important;
+  max-width: 100% !important;
+  clear: both !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+.lhl-print-part-break {
+  display: block !important;
+  clear: both !important;
+  width: 100% !important;
+  height: 0 !important;
+  line-height: 0 !important;
+}
+
+
+/* V71 FIX IN PDF: rút ngắn nhẹ khung tiêu đề PHẦN II */
+@media print {
+  .exam-part-box.exam-part-box-wide {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: 94% !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+  }
+}
+.exam-part-box.exam-part-box-wide {
+  display: inline-block !important;
+  width: auto !important;
+  max-width: 94% !important;
+  box-sizing: border-box !important;
+  clear: both !important;
+  float: none !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  white-space: normal !important;
+  line-height: 1.35 !important;
+}
+
+
+/* V72 FIX IN PDF: chỉnh khung PHẦN II vừa đủ để chữ "đúng" nằm dòng 1 */
+@media print {
+  .exam-part-box.exam-part-box-wide {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: 98.5% !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+  }
+}
+.exam-part-box.exam-part-box-wide {
+  display: inline-block !important;
+  width: auto !important;
+  max-width: 98.5% !important;
+  box-sizing: border-box !important;
+  clear: both !important;
+  float: none !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  white-space: normal !important;
+  line-height: 1.35 !important;
+}
+
+
+/* V73 FIX IN PDF: chỉnh khung PHẦN II để "đúng hoặc" nằm dòng 1, dòng 2 chỉ còn "sai." */
+@media print {
+  .exam-part-box.exam-part-box-wide {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: 99.6% !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+  }
+}
+.exam-part-box.exam-part-box-wide {
+  display: inline-block !important;
+  width: auto !important;
+  max-width: 99.6% !important;
+  box-sizing: border-box !important;
+  clear: both !important;
+  float: none !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  white-space: normal !important;
+  line-height: 1.35 !important;
+}
+
+
+/* V74: hộp PHẦN II đồng bộ giữa biên dịch và in PDF, mép phải bằng nội dung đề */
+.exam-part-box.exam-part-box-wide {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  clear: both !important;
+  float: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  white-space: normal !important;
+  line-height: 1.35 !important;
+  text-align: left !important;
+}
+@media print {
+  .exam-part-box.exam-part-box-wide {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    clear: both !important;
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+    text-align: left !important;
+  }
+}
+
+
+/* V75: Ẩn đáp án/đáp số phần III thì co khoảng cách câu */
+.lhl-v75-hidden-answer-line,
+.lhl-v75-hidden-answer-br {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  line-height: 0 !important;
+}
+.lhl-v75-compact-p3 {
+  margin-bottom: 8px !important;
+}
+.part3-question-block {
+  margin-bottom: 10px !important;
+}
+.part3-question-block br.lhl-v75-hidden-answer-br {
+  display: none !important;
+}
+@media print {
+  .lhl-v75-hidden-answer-line,
+  .lhl-v75-hidden-answer-br {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+  }
+  .lhl-v75-compact-p3,
+  .part3-question-block {
+    margin-bottom: 8px !important;
+  }
+}
+
+
+/* V76: Ẩn Đáp số/Đáp án phần III thì xóa cả khoảng trống quanh dòng đó */
+.lhl-v76-answer-removed,
+.lhl-v76-br-removed {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  line-height: 0 !important;
+}
+@media print {
+  .lhl-v76-answer-removed,
+  .lhl-v76-br-removed {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+  }
+  .part3-question-block,
+  .question-line {
+    margin-bottom: 8px !important;
+  }
+}
+
+
+/* V77: ép nhãn Câu mới xuống dòng sau khi ẩn đáp số phần III */
+.lhl-v77-question-break {
+  display: block !important;
+  clear: both !important;
+  width: 100% !important;
+  height: 10px !important;
+  line-height: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+@media print {
+  .lhl-v77-question-break {
+    display: block !important;
+    clear: both !important;
+    width: 100% !important;
+    height: 10px !important;
+    line-height: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+
+/* V79: chỉ hỗ trợ In PDF, không thay đổi khoảng cách phần biên dịch */
+@media print {
+  .part3-question-block b,
+  .part3-question-block strong {
+    line-height: inherit;
+  }
+}
+
+
+/* V80: chỉ hỗ trợ In PDF phần III, không ảnh hưởng biên dịch */
+@media print {
+  .lhl-v80-answer-break {
+    display: block !important;
+  }
+}
+
+
+/* V93: nút TikZ nhỏ gọn, đồng bộ; lõi render mới TeX Live -> PDF -> PNG/base64 */
+.btn-tikz-render {
+  background: linear-gradient(180deg,#26c6da,#00838f) !important;
+  color: #fff !important;
+  flex: none !important;
+  min-width: 48px !important;
+  height: 28px !important;
+  padding: 3px 9px !important;
+  margin: 0 !important;
+  border-radius: 7px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  box-shadow: 0 3px 0 #005662, 0 4px 7px rgba(0,0,0,.24) !important;
+  transition: transform .08s ease, box-shadow .08s ease, filter .15s ease !important;
+  white-space: nowrap !important;
+}
+.btn-tikz-render:hover {
+  filter: brightness(1.08) !important;
+  transform: translateY(-1px) !important;
+}
+.btn-tikz-render:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #005662, 0 2px 4px rgba(0,0,0,.22) !important;
+}
+.tikz-image-wrap {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin: 10px 0 !important;
+  clear: both !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+.tikz-image {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+.tikz-render-error {
+  border: 1px solid #e53935 !important;
+  color: #b71c1c !important;
+  padding: 6px !important;
+  margin: 8px 0 !important;
+  background: #ffebee !important;
+}
+
+
+/* V95: bỏ nền xám/đen quanh ảnh TikZ, thêm ô % phóng/thu */
+:root {
+  --lhl-tikz-scale: 100%;
+}
+.tikz-scale-box {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  height: 28px !important;
+  padding: 2px 6px !important;
+  background: linear-gradient(180deg,#455a64,#263238) !important;
+  color: #fff !important;
+  border-radius: 7px !important;
+  box-shadow: 0 3px 0 #1b2327, 0 4px 7px rgba(0,0,0,.24) !important;
+  margin: 0 !important;
+}
+.tikz-scale-label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+#tikz-scale-input {
+  width: 46px !important;
+  height: 20px !important;
+  padding: 1px 4px !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  border-radius: 5px !important;
+  background: #fafafa !important;
+  color: #111 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+}
+.tikz-image-wrap {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin: 10px 0 !important;
+  padding: 6px 8px !important;
+  clear: both !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.tikz-image {
+  display: block !important;
+  margin: 0 auto !important;
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* V96: không dùng nút/ô % trên giao diện. 
+   Muốn thu/phóng ảnh TikZ thì sửa trực tiếp width trong code ảnh:
+   style="width:100%;" -> style="width:70%;" */
+.tikz-scale-box,
+#tikz-scale-input,
+.tikz-scale-label {
+  display: none !important;
+}
+.tikz-image-wrap {
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.tikz-image {
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+  height: auto !important;
+}
+
+
+/* V97: ảnh TikZ/ảnh base64 hiển thị nền trắng, dễ nhìn trong biên dịch và in PDF */
+.preview-content img,
+#preview img,
+img[src^="data:image"],
+img[src^="HINH_ANH_"] {
+  background: #ffffff !important;
+  image-rendering: auto !important;
+}
+
+@media print {
+  .preview-content img,
+  #preview img,
+  img[src^="data:image"],
+  img[src^="HINH_ANH_"] {
+    background: #ffffff !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+}
+
+
+/* V98: đảm bảo ảnh base64 hiển thị nền trắng trong preview và in PDF */
+#preview, .preview-pane, .preview-content {
+  background: #ffffff !important;
+}
+#preview img, .preview-content img, img[src^="data:image"] {
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+@media print {
+  html, body, #preview, .preview-content {
+    background: #ffffff !important;
+  }
+  #preview img, .preview-content img, img[src^="data:image"] {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+}
+
+
+/* V100: bảng LaTeX chuyển trực tiếp sang HTML table */
+.lhl-rendered-latex-table {
+  border-collapse: collapse !important;
+  margin: 10px auto !important;
+  text-align: center !important;
+  font-family: "Times New Roman", serif !important;
+  background: #fff !important;
+}
+.lhl-rendered-latex-table td,
+.lhl-rendered-latex-table th {
+  border: 1px solid #333 !important;
+  padding: 4px 8px !important;
+  vertical-align: middle !important;
+  background: #fff !important;
+}
+@media print {
+  .lhl-rendered-latex-table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    background: #fff !important;
+  }
+  .lhl-rendered-latex-table td,
+  .lhl-rendered-latex-table th {
+    background: #fff !important;
+  }
+}
+
+
+/* V102-CHOT: nút Hình và layout hình bên phải câu hỏi */
+.btn-image-right {
+  background: linear-gradient(180deg,#26c6da,#00838f) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 7px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 3px 0 #005662, 0 4px 7px rgba(0,0,0,.24) !important;
+  white-space: nowrap !important;
+}
+.btn-image-right:hover {
+  filter: brightness(1.08) !important;
+}
+.btn-image-right:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #005662, 0 2px 4px rgba(0,0,0,.22) !important;
+}
+.lhl-question-image-right {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+.lhl-question-img-right img {
+  max-width: 100% !important;
+  height: auto !important;
+}
+@media print {
+  .lhl-question-image-right {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+
+/* V102-CHOT: nút Hình xuất đúng cấu trúc immini-wrap/immini-text/immini-figure */
+.immini-wrap{
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    gap:12px !important;
+    width:100% !important;
+    clear:both !important;
+    margin:4px 0 6px 0 !important;
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+}
+.immini-text{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+}
+.immini-figure{
+    flex:0 0 auto !important;
+    max-width:42% !important;
+    display:flex !important;
+    justify-content:center !important;
+    align-items:flex-start !important;
+    margin-left:8px !important;
+}
+.immini-figure img{
+    max-width:100% !important;
+    height:auto !important;
+}
+@media print{
+    .immini-wrap{
+        page-break-inside:avoid !important;
+        break-inside:avoid !important;
+    }
+}
+
+
+/* V102-CHOT: bảng HTML chuẩn hóa từ Word */
+.lhl-rendered-latex-table {
+  border-collapse: collapse !important;
+  margin: 10px auto !important;
+  text-align: center !important;
+  font-family: "Times New Roman", serif !important;
+  background: #fff !important;
+}
+.lhl-rendered-latex-table td,
+.lhl-rendered-latex-table th {
+  border: 1px solid #333 !important;
+  padding: 4px 8px !important;
+  vertical-align: middle !important;
+  background: #fff !important;
+}
+@media print {
+  .lhl-rendered-latex-table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+
+/* V102-CHOT-FIX2: bảng Word HTML sạch */
+.lhl-rendered-latex-table {
+  border-collapse: collapse !important;
+  margin: 10px auto !important;
+  text-align: center !important;
+  font-family: "Times New Roman", serif !important;
+  background: #fff !important;
+}
+.lhl-rendered-latex-table td,
+.lhl-rendered-latex-table th {
+  border: 1px solid #333 !important;
+  padding: 4px 8px !important;
+  vertical-align: middle !important;
+  background: #fff !important;
+}
+
+
+/* FIX5: đồng bộ kích thước nút TikZ và nút Hình với các nút cùng hàng */
+.btn-tikz-render {
+  flex: unset !important;
+  min-width: 58px !important;
+  width: auto !important;
+  height: 30px !important;
+  padding: 0 9px !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 7px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  background: linear-gradient(180deg, #26c6da, #00838f) !important;
+  color: #fff !important;
+  box-shadow: 0 3px 0 #005662, 0 4px 7px rgba(0,0,0,.24) !important;
+  white-space: nowrap !important;
+}
+.btn-image-right {
+  min-width: 58px !important;
+  width: auto !important;
+  height: 30px !important;
+  padding: 0 9px !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 7px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  background: linear-gradient(180deg, #26c6da, #00838f) !important;
+  color: #fff !important;
+  box-shadow: 0 3px 0 #005662, 0 4px 7px rgba(0,0,0,.24) !important;
+  white-space: nowrap !important;
+}
+.btn-tikz-render:hover,
+.btn-image-right:hover {
+  filter: brightness(1.08) !important;
+}
+.btn-tikz-render:active,
+.btn-image-right:active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #005662, 0 2px 4px rgba(0,0,0,.22) !important;
+}
+
+
+/* FIX6: bê nguyên định dạng nút IN PDF sang TikZ, nút Tất cả sang Hình; chỉ đổi màu */
+.btn-tikz-render {
+  flex: unset !important;
+  padding: 6px 10px !important;
+  min-width: unset !important;
+  height: auto !important;
+  margin: 0 !important;
+  font-size: 11px !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-weight: bold !important;
+  border-radius: 5px !important;
+  color: white !important;
+  background: #00897b !important;
+  transition: 0.1s !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  border-bottom: 3px solid rgba(0,0,0,0.3) !important;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4) !important;
+}
+.btn-tikz-render:hover {
+  background: #26a69a !important;
+  filter: none !important;
+}
+.btn-tikz-render:active {
+  transform: translateY(2px) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.3) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+}
+
+/* Nút Hình bê form nút Tất cả, chỉ đổi màu riêng */
+.btn-image-right {
+  padding: 0 9px !important;
+  height: 30px !important;
+  min-width: 58px !important;
+  margin: 0 !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-weight: bold !important;
+  font-size: 11px !important;
+  border-radius: 5px !important;
+  color: white !important;
+  background: #00897b !important;
+  transition: 0.1s !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  border-bottom: 3px solid rgba(0,0,0,0.3) !important;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4) !important;
+}
+.btn-image-right:hover {
+  background: #26a69a !important;
+  filter: none !important;
+}
+.btn-image-right:active {
+  transform: translateY(2px) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.3) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+}
+
+
+/* FIX7: chống tràn hàng nút Tiêu đề - TikZ - IN PDF - Tương tác - Khóa - Save As */
+.btn-tikz-render {
+  flex: 0 0 54px !important;
+  width: 54px !important;
+  min-width: 54px !important;
+  height: 30px !important;
+  padding: 0 6px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  background: #00897b !important;
+}
+.btn-inpdf-compact {
+  flex: 0 0 76px !important;
+  width: 76px !important;
+  min-width: 76px !important;
+  height: 30px !important;
+  padding: 0 6px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  background: #9c27b0 !important;
+}
+.btn-tikz-render,
+.btn-inpdf-compact {
+  border: none !important;
+  cursor: pointer !important;
+  font-weight: bold !important;
+  border-radius: 5px !important;
+  color: white !important;
+  transition: 0.1s !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  border-bottom: 3px solid rgba(0,0,0,0.3) !important;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4) !important;
+}
+.btn-tikz-render:hover { background: #26a69a !important; filter: none !important; }
+.btn-inpdf-compact:hover { background: #ab47bc !important; filter: none !important; }
+
+
+/* FIX8: canh mép phải nút Save As cho thẳng hàng, không lấn sang phần biên dịch */
+.btn-save-as {
+  flex: 0 0 74px !important;
+  width: 74px !important;
+  min-width: 74px !important;
+  max-width: 74px !important;
+  height: 30px !important;
+  padding: 0 5px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+
+/* FIX9: co nút Tương tác để Save As thẳng mép phải, không tràn sang biên dịch */
+.btn-interactive-compact {
+  flex: 0 0 86px !important;
+  width: 86px !important;
+  min-width: 86px !important;
+  max-width: 86px !important;
+  height: 30px !important;
+  padding: 0 5px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  background: #00acc1 !important;
+}
+.btn-interactive-compact:hover {
+  background: #26c6da !important;
+}
+.btn-save-as {
+  flex: 0 0 72px !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  height: 30px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+
+/* FIX10: tinh chỉnh cuối hàng TikZ/IN PDF/Tương tác/Khóa/Save As để mép phải gọn và thẳng */
+.btn-interactive-compact {
+  flex: 0 0 80px !important;
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+  height: 30px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  background: #00acc1 !important;
+}
+.btn-lock-compact {
+  flex: 0 0 60px !important;
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  height: 30px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+.btn-save-as {
+  flex: 0 0 68px !important;
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 68px !important;
+  height: 30px !important;
+  padding: 0 3px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-size: 10.5px !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+
+/* FIX24: đồng bộ nút Hình giữa biên dịch và IN PDF, kéo chữ gần hình hơn */
+#paper .immini-wrap,
+.immini-wrap{
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:flex-start !important;
+    gap:var(--immini-gap, -1px) !important;
+    width:100% !important;
+    margin:2px 0 8px 0 !important;
+}
+#paper .immini-text,
+.immini-text{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+}
+#paper .immini-figure,
+.immini-figure{
+    flex:0 0 var(--immini-figure-col, 26%) !important;
+    max-width:var(--immini-figure-col, 26%) !important;
+    text-align:right !important;
+    margin-top:0 !important;
+    margin-left:0 !important;
+    padding-top:0 !important;
+}
+#paper .immini-figure > div,
+.immini-figure > div{
+    width:100% !important;
+    margin:0 !important;
+    justify-content:flex-end !important;
+}
+#paper .immini-figure img,
+#paper .immini-figure svg,
+.immini-figure img,
+.immini-figure svg{
+    max-width:100% !important;
+    height:auto !important;
+    display:block !important;
+    margin:0 0 0 auto !important;
+    background:#fff !important;
+}
+@media print{
+    .immini-wrap{
+        display:flex !important;
+        align-items:flex-start !important;
+        justify-content:flex-start !important;
+        gap:var(--immini-gap, -1px) !important;
+        width:100% !important;
+        margin:2px 0 8px 0 !important;
+        page-break-inside:avoid !important;
+        break-inside:avoid !important;
+    }
+    .immini-text{
+        flex:1 1 auto !important;
+        min-width:0 !important;
+    }
+    .immini-figure{
+        flex:0 0 var(--immini-figure-col, 26%) !important;
+        max-width:var(--immini-figure-col, 26%) !important;
+        text-align:right !important;
+        margin-top:0 !important;
+        margin-left:0 !important;
+        padding-top:0 !important;
+    }
+    .immini-figure > div{
+        width:100% !important;
+        margin:0 !important;
+        justify-content:flex-end !important;
+    }
+    .immini-figure img,
+    .immini-figure svg{
+        max-width:100% !important;
+        height:auto !important;
+        display:block !important;
+        margin:0 0 0 auto !important;
+        background:#fff !important;
+        print-color-adjust:exact !important;
+        -webkit-print-color-adjust:exact !important;
+    }
+}
+
+
+/* FIX25: kéo nội dung câu hỏi gần hình hơn và giữ ảnh ăn theo width */
+#paper .immini-wrap,
+.immini-wrap{
+    gap:var(--immini-gap, -1px) !important;
+}
+#paper .immini-figure,
+.immini-figure{
+    flex:0 0 var(--immini-figure-col, 26%) !important;
+    max-width:var(--immini-figure-col, 26%) !important;
+}
+#paper .immini-figure img,
+.immini-figure img{
+    max-width:100% !important;
+    height:auto !important;
+}
+@media print{
+    .immini-wrap{ gap:var(--immini-gap, -1px) !important; }
+    .immini-figure{
+        flex:0 0 var(--immini-figure-col, 26%) !important;
+        max-width:var(--immini-figure-col, 26%) !important;
+    }
+    .immini-figure img{
+        max-width:100% !important;
+        height:auto !important;
+    }
+}
+
+
+/* FIX26: nút Hình có thông số chỉnh khoảng cách ngay trong code
+   Sửa --immini-gap để tăng/giảm khoảng cách chữ-hình.
+   Sửa --immini-figure-col để tăng/giảm vùng cột hình.
+*/
+#paper .immini-wrap,
+.immini-wrap{
+    gap:var(--immini-gap, -1px) !important;
+}
+#paper .immini-figure,
+.immini-figure{
+    flex:0 0 var(--immini-figure-col, 26%) !important;
+    max-width:var(--immini-figure-col, 26%) !important;
+}
+@media print{
+    .immini-wrap{
+        gap:var(--immini-gap, -1px) !important;
+    }
+    .immini-figure{
+        flex:0 0 var(--immini-figure-col, 26%) !important;
+        max-width:var(--immini-figure-col, 26%) !important;
+    }
+}
+
+
+/* FIX27: code nút Hình hiện rõ thông số và bỏ margin -10px cũ */
+#paper .immini-figure > div,
+.immini-figure > div{
+    justify-content:flex-end !important;
+    margin:0 !important;
+}
+@media print{
+    .immini-figure > div{
+        justify-content:flex-end !important;
+        margin:0 !important;
+    }
+}
+
+
+/* FIX28: mặc định nút Hình theo thông số thầy chốt */
+#paper .immini-wrap,
+.immini-wrap{
+    gap:var(--immini-gap, -1px) !important;
+}
+#paper .immini-figure,
+.immini-figure{
+    flex:0 0 var(--immini-figure-col, 21%) !important;
+    max-width:var(--immini-figure-col, 21%) !important;
+}
+@media print{
+    .immini-wrap{
+        gap:var(--immini-gap, -1px) !important;
+    }
+    .immini-figure{
+        flex:0 0 var(--immini-figure-col, 21%) !important;
+        max-width:var(--immini-figure-col, 21%) !important;
+    }
+}
+
+/* ============================================================
+   LHL Tool 1.0 - DONG BO HIEU UNG NUT (CHI GIAO DIEN)
+   - Chi them hover/active effect; khong thay doi ham xu ly.
+   - Bao phu thanh cong cu, nut Ngan hang, modal va tab GAN ID.
+   ============================================================ */
+html body button:not(:disabled),
+html body .btn-main:not(:disabled),
+html body .btn-icon:not(:disabled),
+html body .tab-item,
+html body .tab-add,
+html body .select-3d:not(:disabled),
+html body #qbankOverlay button:not(:disabled),
+html body #lesson109Overlay button:not(:disabled),
+html body #lesson148Overlay button:not(:disabled) {
+  transition: transform .13s ease, filter .13s ease, box-shadow .13s ease, background-color .13s ease !important;
+  transform-origin: center center !important;
+}
+html body button:not(:disabled):hover,
+html body .btn-main:not(:disabled):hover,
+html body .btn-icon:not(:disabled):hover,
+html body .tab-item:hover,
+html body .tab-add:hover,
+html body .select-3d:not(:disabled):hover,
+html body #qbankOverlay button:not(:disabled):hover,
+html body #lesson109Overlay button:not(:disabled):hover,
+html body #lesson148Overlay button:not(:disabled):hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.08) saturate(1.03) !important;
+  box-shadow: 0 5px 9px rgba(0,0,0,.40), inset 0 1px 1px rgba(255,255,255,.22) !important;
+}
+html body button:not(:disabled):active,
+html body .btn-main:not(:disabled):active,
+html body .btn-icon:not(:disabled):active,
+html body .tab-item:active,
+html body .tab-add:active,
+html body .select-3d:not(:disabled):active,
+html body #qbankOverlay button:not(:disabled):active,
+html body #lesson109Overlay button:not(:disabled):active,
+html body #lesson148Overlay button:not(:disabled):active,
+html body .btn-pressed {
+  transform: translateY(2px) !important;
+  filter: brightness(.97) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.40), inset 0 1px 1px rgba(255,255,255,.18) !important;
+}
+html body button:disabled,
+html body select:disabled {
+  cursor: not-allowed !important;
+  filter: saturate(.62) opacity(.75) !important;
+}
+
+
+/* ============================================================
+   LHL Tool 1.0 - HIEU UNG HOP THOAI V2 (CHI GIAO DIEN)
+   - Hop Ngan hang chi animate khi mo lan dau, khong animate luc chuyen tab.
+   - Dong hop Ngan hang / Gán ID thu nhe va mo dan truoc khi remove.
+   - Cac popup don le van co hieu ung mo nhe, khong thay doi xu ly.
+   ============================================================ */
+@keyframes lhlModalBackdropEnterV2 {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes lhlModalPanelEnterV2 {
+  from { opacity: 0; transform: translateY(5px) scale(.982); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes lhlModalBackdropExitV2 {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes lhlModalPanelExitV2 {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(4px) scale(.982); }
+}
+/* Popup doc lap: chi animate khi vua duoc tao; khong ap vao Ngan hang vi co chuyen tab. */
+.exam-modal-mask,
+.lhl-bank-gen-overlay,
+.lhl-gs-overlay,
+.lhl-config-overlay,
+.lhl-mix-overlay,
+.lhl-merge-overlay,
+.lhl-cv-overlay {
+  animation: lhlModalBackdropEnterV2 .14s ease-out both !important;
+}
+.exam-modal-mask > :first-child,
+.lhl-bank-gen-overlay > :first-child,
+.lhl-gs-overlay > :first-child,
+.lhl-config-overlay > :first-child,
+.lhl-mix-overlay > :first-child,
+.lhl-merge-overlay > :first-child,
+.lhl-cv-overlay > :first-child {
+  animation: lhlModalPanelEnterV2 .18s cubic-bezier(.16,1,.3,1) both !important;
+  transform-origin: center center !important;
+}
+/* Ngan hang/GAN ID chi nhan class nay khi mo tu nut Ngan hang ben ngoai. */
+.lhl-dialog-enter-v2 { animation: lhlModalBackdropEnterV2 .14s ease-out both !important; }
+.lhl-dialog-enter-v2 > :first-child {
+  animation: lhlModalPanelEnterV2 .18s cubic-bezier(.16,1,.3,1) both !important;
+  transform-origin:center center !important;
+}
+.lhl-dialog-exit-v2 { pointer-events:none !important; animation: lhlModalBackdropExitV2 .14s ease-in both !important; }
+.lhl-dialog-exit-v2 > :first-child {
+  animation: lhlModalPanelExitV2 .14s ease-in both !important;
+  transform-origin:center center !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .exam-modal-mask, .lhl-bank-gen-overlay, .lhl-gs-overlay, .lhl-config-overlay,
+  .lhl-mix-overlay, .lhl-merge-overlay, .lhl-cv-overlay,
+  .exam-modal-mask > :first-child, .lhl-bank-gen-overlay > :first-child,
+  .lhl-gs-overlay > :first-child, .lhl-config-overlay > :first-child,
+  .lhl-mix-overlay > :first-child, .lhl-merge-overlay > :first-child,
+  .lhl-cv-overlay > :first-child, .lhl-dialog-enter-v2, .lhl-dialog-enter-v2 > :first-child,
+  .lhl-dialog-exit-v2, .lhl-dialog-exit-v2 > :first-child { animation-duration:.01ms !important; }
+}
+
+
+/* ============================================================
+   LHL Tool 1.0 - HIEU UNG HOP THOAI V3 MO RONG (CHI GIAO DIEN)
+   - Khong animate khi chuyen tab Ngan hang/GAN ID.
+   - Ap dung mo/dong mem cho cac popup chuc nang doc lap.
+   - Chuyen dong kieu Windows 11: opacity + scale nhe + translate nhe.
+   ============================================================ */
+@keyframes lhlModalBackdropEnterV3 {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to   { opacity: 1; backdrop-filter: blur(1.5px); }
+}
+@keyframes lhlModalPanelEnterV3 {
+  from { opacity: 0; transform: translateY(9px) scale(.962); filter: blur(.15px); }
+  68%  { opacity: 1; transform: translateY(-1px) scale(1.004); filter: blur(0); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes lhlModalBackdropExitV3 {
+  from { opacity: 1; backdrop-filter: blur(1.5px); }
+  to   { opacity: 0; backdrop-filter: blur(0px); }
+}
+@keyframes lhlModalPanelExitV3 {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(7px) scale(.958); }
+}
+
+/* Hop dong/mo co dinh san trong index. */
+#save-confirm-overlay[style*="flex"],
+#custom-confirm-overlay[style*="flex"] {
+  animation: lhlModalBackdropEnterV3 .17s ease-out both !important;
+}
+#save-confirm-overlay[style*="flex"] > .dialog-box-3d,
+#custom-confirm-overlay[style*="flex"] > .dialog-box-3d {
+  animation: lhlModalPanelEnterV3 .24s cubic-bezier(.16,1,.3,1) both !important;
+  transform-origin: center center !important;
+}
+
+/* Popup doc lap: cac nut mo hop thoai khac. */
+.exam-modal-mask,
+.lhl-bank-gen-overlay,
+.lhl-gs-overlay,
+.lhl-config-overlay,
+.lhl-mix-overlay,
+.lhl-merge-overlay,
+.lhl-cv-overlay,
+#qbank123DialogMask,
+#q133MatrixOverlay,
+#lesson111DeleteModal,
+#lesson115DialogOverlay,
+#lesson128GenOverlay {
+  animation: lhlModalBackdropEnterV3 .17s ease-out both !important;
+}
+.exam-modal-mask > :first-child,
+.lhl-bank-gen-overlay > :first-child,
+.lhl-gs-overlay > :first-child,
+.lhl-config-overlay > :first-child,
+.lhl-mix-overlay > :first-child,
+.lhl-merge-overlay > :first-child,
+.lhl-cv-overlay > :first-child,
+#qbank123DialogMask > :first-child,
+#q133MatrixOverlay > :first-child,
+#lesson111DeleteModal > :first-child,
+#lesson115DialogOverlay > :first-child,
+#lesson128GenOverlay > :first-child {
+  animation: lhlModalPanelEnterV3 .24s cubic-bezier(.16,1,.3,1) both !important;
+  transform-origin: center center !important;
+}
+
+/* Ngan hang/GAN ID: chi lop V2 gan khi mo tu nut ngoai hoac dong that su. */
+.lhl-dialog-enter-v2 { animation: lhlModalBackdropEnterV3 .17s ease-out both !important; }
+.lhl-dialog-enter-v2 > :first-child {
+  animation: lhlModalPanelEnterV3 .24s cubic-bezier(.16,1,.3,1) both !important;
+}
+.lhl-dialog-exit-v2,
+.lhl-pop-exit-v3,
+.lhl-static-exit-v3 {
+  pointer-events:none !important;
+  animation: lhlModalBackdropExitV3 .17s ease-in both !important;
+}
+.lhl-dialog-exit-v2 > :first-child,
+.lhl-pop-exit-v3 > :first-child,
+.lhl-static-exit-v3 > :first-child {
+  animation: lhlModalPanelExitV3 .17s cubic-bezier(.4,0,1,1) both !important;
+  transform-origin:center center !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  #save-confirm-overlay[style*="flex"], #custom-confirm-overlay[style*="flex"],
+  .exam-modal-mask, .lhl-bank-gen-overlay, .lhl-gs-overlay, .lhl-config-overlay,
+  .lhl-mix-overlay, .lhl-merge-overlay, .lhl-cv-overlay, #qbank123DialogMask,
+  #q133MatrixOverlay, #lesson111DeleteModal, #lesson115DialogOverlay, #lesson128GenOverlay,
+  .lhl-dialog-enter-v2, .lhl-dialog-exit-v2, .lhl-pop-exit-v3, .lhl-static-exit-v3,
+  #save-confirm-overlay[style*="flex"] > .dialog-box-3d,
+  #custom-confirm-overlay[style*="flex"] > .dialog-box-3d,
+  .exam-modal-mask > :first-child, .lhl-bank-gen-overlay > :first-child,
+  .lhl-gs-overlay > :first-child, .lhl-config-overlay > :first-child,
+  .lhl-mix-overlay > :first-child, .lhl-merge-overlay > :first-child,
+  .lhl-cv-overlay > :first-child, #qbank123DialogMask > :first-child,
+  #q133MatrixOverlay > :first-child, #lesson111DeleteModal > :first-child,
+  #lesson115DialogOverlay > :first-child, #lesson128GenOverlay > :first-child,
+  .lhl-dialog-enter-v2 > :first-child, .lhl-dialog-exit-v2 > :first-child,
+  .lhl-pop-exit-v3 > :first-child, .lhl-static-exit-v3 > :first-child {
+    animation-duration: .01ms !important;
+  }
+}
+
+
+/* ============================================================
+   LHL Tool 1.0 - V4: chuyen NOI BO sang tab DE THI khong chop.
+   Khong anh huong animation mo/dong hop thoai that su.
+   ============================================================ */
+#qbankOverlay.lhl-bank-tab-instant-v4,
+#qbankOverlay.lhl-bank-tab-instant-v4 .qbank-box,
+#qbankOverlay.lhl-bank-tab-instant-v4 .qbank-body,
+#qbankOverlay.lhl-bank-tab-instant-v4 .qbank-title,
+#qbankOverlay.lhl-bank-tab-instant-v4 .exam-bank-init,
+#qbankOverlay.lhl-bank-tab-instant-v4 .exam-bank-list {
+  animation: none !important;
+  transition: none !important;
+}
+#qbankOverlay.lhl-bank-tab-instant-v4 .qbank-body {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+
+/* ============================================================
+   LHL Tool 1.0 - V7: dong mem hop Xuat ma tran.
+   ============================================================ */
+#q133MatrixOverlay.lhl-matrix-exit-v7{
+  display:flex !important;
+  pointer-events:none !important;
+  animation:lhlModalBackdropExitV3 .182s ease-in both !important;
+}
+#q133MatrixOverlay.lhl-matrix-exit-v7 > #q133MatrixDialog{
+  animation:lhlModalPanelExitV3 .182s cubic-bezier(.4,0,1,1) both !important;
+  transform-origin:center center !important;
+}
+@media (prefers-reduced-motion: reduce){
+  #q133MatrixOverlay.lhl-matrix-exit-v7,
+  #q133MatrixOverlay.lhl-matrix-exit-v7 > #q133MatrixDialog{
+    animation-duration:.01ms !important;
+  }
+}
+
+/* ============================================================
+   LHL Tool 1.0 - V9: dong mo mem hop xac nhan luu + Sua file NH.
+   Chi hieu ung giao dien, khong thay doi du lieu/chuc nang.
+   ============================================================ */
+@keyframes lhlConfirmBackdropEnterV9 { from { opacity:0; } to { opacity:1; } }
+@keyframes lhlConfirmPanelEnterV9 {
+  from { opacity:0; transform:translateY(8px) scale(.968); }
+  72% { opacity:1; transform:translateY(-1px) scale(1.004); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes lhlConfirmBackdropExitV9 { from { opacity:1; } to { opacity:0; } }
+@keyframes lhlConfirmPanelExitV9 {
+  from { opacity:1; transform:translateY(0) scale(1); }
+  to { opacity:0; transform:translateY(7px) scale(.965); }
+}
+#save-confirm-overlay.lhl-confirm-enter-v9,
+#custom-confirm-overlay.lhl-confirm-enter-v9 {
+  animation:lhlConfirmBackdropEnterV9 .17s ease-out both!important;
+}
+#save-confirm-overlay.lhl-confirm-enter-v9 > .dialog-box-3d,
+#custom-confirm-overlay.lhl-confirm-enter-v9 > .dialog-box-3d {
+  animation:lhlConfirmPanelEnterV9 .25s cubic-bezier(.16,1,.3,1) both!important;
+  transform-origin:center center!important;
+}
+#save-confirm-overlay.lhl-confirm-exit-v9,
+#custom-confirm-overlay.lhl-confirm-exit-v9 {
+  display:flex!important;
+  pointer-events:none!important;
+  animation:lhlConfirmBackdropExitV9 .19s ease-in both!important;
+}
+#save-confirm-overlay.lhl-confirm-exit-v9 > .dialog-box-3d,
+#custom-confirm-overlay.lhl-confirm-exit-v9 > .dialog-box-3d {
+  animation:lhlConfirmPanelExitV9 .19s cubic-bezier(.4,0,1,1) both!important;
+  transform-origin:center center!important;
+}
+.lhl-bank-edit-ghost-v9 {
+  pointer-events:none!important;
+  animation:lhlConfirmBackdropExitV9 .19s ease-in both!important;
+}
+.lhl-bank-edit-ghost-v9 > :first-child {
+  animation:lhlConfirmPanelExitV9 .19s cubic-bezier(.4,0,1,1) both!important;
+  transform-origin:center center!important;
+}
+@media (prefers-reduced-motion: reduce) {
+  #save-confirm-overlay.lhl-confirm-enter-v9,
+  #custom-confirm-overlay.lhl-confirm-enter-v9,
+  #save-confirm-overlay.lhl-confirm-exit-v9,
+  #custom-confirm-overlay.lhl-confirm-exit-v9,
+  #save-confirm-overlay.lhl-confirm-enter-v9 > .dialog-box-3d,
+  #custom-confirm-overlay.lhl-confirm-enter-v9 > .dialog-box-3d,
+  #save-confirm-overlay.lhl-confirm-exit-v9 > .dialog-box-3d,
+  #custom-confirm-overlay.lhl-confirm-exit-v9 > .dialog-box-3d,
+  .lhl-bank-edit-ghost-v9,
+  .lhl-bank-edit-ghost-v9 > :first-child { animation-duration:.01ms!important; }
+}
+
+
+/* ONLINE ALPHA V2: canh mép phải cụm nút cuối hàng và tránh lệch Save As/G.Sheet */
+.toolbar, .top-toolbar, .button-row, #toolbar, #main-toolbar{
+  box-sizing:border-box;
+}
+button, .btn, select, input{
+  box-sizing:border-box;
+}
+#btn-save-as, button[onclick*="SaveAs"], button[onclick*="performSaveAs"],
+#btn-gsheet, button[onclick*="GSheet"], button[onclick*="GoogleSheet"], button[onclick*="openGoogleSheet"]{
+  max-width:100%;
+}
+/* Trên bản online, giữ vùng preview/editor nhận lại thao tác sau khi in */
+body.lhl-printing-online #editor,
+body.lhl-printing-online #paper{
+  pointer-events:auto !important;
+}
+
+/* ONLINE ALPHA V3: canh lại mép phải và bo tròn nút G.Sheet/Save As */
+.btn-save-as,
+button[title*="Google Apps Script"],
+button[onmousedown*="openGoogleScriptSettingDialog"]{
+  border-radius: 7px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+button[title*="Google Apps Script"],
+button[onmousedown*="openGoogleScriptSettingDialog"]{
+  flex: 0 0 80px !important;
+  width: 80px !important;
+  min-width: 80px !important;
+  max-width: 80px !important;
+  margin-right: 0 !important;
+}
+#editor-container .top-controls{
+  overflow: hidden !important;
+}
+
+
+/* ONLINE ALPHA V4: che kín giao diện nền khi mở hộp in PDF */
+#lhl-print-cover-online{
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  background: #f3f3f3 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: auto !important;
+}
+#lhl-print-cover-online .lhl-print-cover-box{
+  padding: 16px 24px !important;
+  border-radius: 10px !important;
+  background: #1f2933 !important;
+  color: #fff !important;
+  font-family: "Segoe UI", Arial, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25) !important;
+}
+
+/* ONLINE ALPHA V4: nút G.Sheet ngắn hơn, bo tròn và không tràn mép phải */
+button[onmousedown*="openGoogleScriptSettingDialog"]{
+  flex: 0 0 72px !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  padding: 0 3px !important;
+  margin-right: 0 !important;
+  border-radius: 7px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  font-size: 10.5px !important;
+}
+
+
+/* ONLINE ALPHA V5: co nút G.Sheet thêm để mép phải thẳng hàng, không bị cắt bo góc */
+button[onmousedown*="openGoogleScriptSettingDialog"]{
+  flex: 0 0 60px !important;
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  padding: 0 2px !important;
+  margin-right: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  font-size: 10px !important;
+  letter-spacing: -0.2px !important;
+}
+
+
+/* ONLINE ALPHA V7: canh lại toolbar, nút G.Sheet và preview vừa khung */
+body{overflow:hidden!important;}
+#editor-container{width:46%!important;min-width:560px!important;max-width:calc(100vw - 430px)!important;}
+#preview-container{overflow-x:hidden!important;padding:18px 18px 18px 18px!important;box-sizing:border-box!important;}
+#paper{max-width:calc(100% - 8px)!important;width:min(210mm, calc(100% - 8px))!important;box-sizing:border-box!important;}
+#editor-container .top-controls .row{box-sizing:border-box!important;max-width:100%!important;}
+.author-3d:first-child{width:248px!important;flex:0 0 248px!important;max-width:248px!important;}
+.author-3d:first-child input#author-input{width:168px!important;flex:0 0 168px!important;max-width:168px!important;}
+button[onmousedown*="openGoogleScriptSettingDialog"]{flex:0 0 54px!important;width:54px!important;min-width:54px!important;max-width:54px!important;padding:0 1px!important;margin-right:0!important;border-radius:8px!important;font-size:9.3px!important;letter-spacing:-.35px!important;overflow:hidden!important;}
+button[onmousedown*="openQuestionBankDialog"]{margin-right:0!important;}
+
+/* ONLINE ALPHA V7: hộp giải thích trước khi trình duyệt xin quyền ghi thư mục */
+#lhlOnlineFolderAccessNotice{position:fixed;inset:0;background:rgba(0,0,0,.68);z-index:2147483646;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI",Arial,Tahoma,sans-serif;}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-box{width:min(560px,calc(100% - 34px));background:#24272b;border:1px solid #03a9f4;border-radius:12px;color:#fff;box-shadow:0 24px 50px rgba(0,0,0,.65),inset 0 1px 1px rgba(255,255,255,.12);padding:20px 22px;box-sizing:border-box;}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-title{font-size:22px;font-weight:900;color:#03a9f4;margin-bottom:12px;text-shadow:1px 1px 2px rgba(0,0,0,.45);}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-text{font-size:16px;line-height:1.55;color:#eef7fa;background:#1b1e22;border-left:5px solid #03a9f4;border-radius:8px;padding:12px 14px;margin-bottom:18px;}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-actions{display:flex;justify-content:flex-end;gap:12px;}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-btn{border:0;border-radius:8px;color:#fff;font-weight:900;font-size:15px;padding:10px 20px;min-width:110px;cursor:pointer;box-shadow:0 5px 10px rgba(0,0,0,.42),inset 0 1px 1px rgba(255,255,255,.22);border-bottom:3px solid rgba(0,0,0,.35);font-family:"Segoe UI",Arial,Tahoma,sans-serif;}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-btn:active{transform:translateY(1px);box-shadow:0 3px 6px rgba(0,0,0,.4);border-bottom-width:2px;}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-ok{background:linear-gradient(#29b6f6,#0288d1);}
+#lhlOnlineFolderAccessNotice .lhl-folder-notice-cancel{background:linear-gradient(#78909c,#546e7a);}
+
+
+/* ONLINE ALPHA V8: kéo dài ô tác giả để hàng nút dưới đầy hơn, giữ mép phải G.Sheet gọn */
+#editor-container .top-controls .row:nth-of-type(5){gap:4px!important;overflow:hidden!important;}
+#editor-container .top-controls .row:nth-of-type(5) .author-3d:first-child{width:300px!important;flex:0 0 300px!important;max-width:300px!important;}
+#editor-container .top-controls .row:nth-of-type(5) .author-3d:first-child input#author-input{width:220px!important;flex:0 0 220px!important;max-width:220px!important;}
+button[onmousedown*="openGoogleScriptSettingDialog"]{flex:0 0 58px!important;width:58px!important;min-width:58px!important;max-width:58px!important;padding:0 2px!important;border-radius:8px!important;font-size:9.5px!important;letter-spacing:-.35px!important;}
+@media (max-width: 1350px){
+  #editor-container .top-controls .row:nth-of-type(5) .author-3d:first-child{width:280px!important;flex-basis:280px!important;max-width:280px!important;}
+  #editor-container .top-controls .row:nth-of-type(5) .author-3d:first-child input#author-input{width:200px!important;flex-basis:200px!important;max-width:200px!important;}
+  button[onmousedown*="openGoogleScriptSettingDialog"]{flex-basis:54px!important;width:54px!important;min-width:54px!important;max-width:54px!important;font-size:9.1px!important;}
+}
+
+
+/* ONLINE ALPHA V9: hàng Tác giả/G.Sheet canh mép phải đẹp hơn */
+#editor-container .top-controls .row:has(#author-input){
+  gap:4px!important;
+  overflow:hidden!important;
+  padding-right:4px!important;
+}
+#editor-container .top-controls .row:has(#author-input) .author-3d:first-child{
+  width:322px!important;
+  flex:0 0 322px!important;
+  max-width:322px!important;
+}
+#editor-container .top-controls .row:has(#author-input) .author-3d:first-child input#author-input{
+  width:242px!important;
+  flex:0 0 242px!important;
+  max-width:242px!important;
+}
+#editor-container .top-controls .row:has(#author-input) button[onmousedown*="openGoogleScriptSettingDialog"]{
+  flex:0 0 58px!important;
+  width:58px!important;
+  min-width:58px!important;
+  max-width:58px!important;
+  border-radius:8px!important;
+  margin-right:0!important;
+}
+@media (max-width: 1450px){
+  #editor-container .top-controls .row:has(#author-input) .author-3d:first-child{
+    width:306px!important;flex-basis:306px!important;max-width:306px!important;
+  }
+  #editor-container .top-controls .row:has(#author-input) .author-3d:first-child input#author-input{
+    width:226px!important;flex-basis:226px!important;max-width:226px!important;
+  }
+  #editor-container .top-controls .row:has(#author-input) button[onmousedown*="openConvertFileDialog"]{
+    flex-basis:88px!important;width:88px!important;min-width:88px!important;max-width:88px!important;font-size:10.6px!important;
+  }
+}
+
+
+/* ONLINE ALPHA V10: canh lại hàng Tác giả/G.Sheet - không cắt chữ, không tràn mép phải */
+#editor-container .top-controls .row:has(#author-input){
+  gap:4px!important;
+  overflow:visible!important;
+  padding-right:6px!important;
+  box-sizing:border-box!important;
+}
+#editor-container .top-controls .row:has(#author-input) .author-3d:first-child{
+  width:286px!important;
+  flex:0 0 286px!important;
+  max-width:286px!important;
+}
+#editor-container .top-controls .row:has(#author-input) .author-3d:first-child input#author-input{
+  width:206px!important;
+  flex:0 0 206px!important;
+  max-width:206px!important;
+}
+#editor-container .top-controls .row:has(#author-input) .page-start-3d{
+  width:94px!important; flex:0 0 94px!important; max-width:94px!important;
+}
+#editor-container .top-controls .row:has(#author-input) button[onmousedown*="openMergeDialog"]{
+  width:82px!important; flex:0 0 82px!important; max-width:82px!important;
+}
+#editor-container .top-controls .row:has(#author-input) button[onmousedown*="openConvertFileDialog"]{
+  width:104px!important; flex:0 0 104px!important; max-width:104px!important;
+}
+#editor-container .top-controls .row:has(#author-input) button[onmousedown*="insertImage"]{
+  width:70px!important; flex:0 0 70px!important; max-width:70px!important;
+}
+#editor-container .top-controls .row:has(#author-input) button[onmousedown*="openGoogleScriptSettingDialog"]{
+  width:72px!important;
+  flex:0 0 72px!important;
+  min-width:72px!important;
+  max-width:72px!important;
+  padding:0 4px!important;
+  border-radius:8px!important;
+  font-size:10px!important;
+  letter-spacing:0!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+}
+
+/* ONLINE ALPHA V11: co gọn nút G.Sheet thêm chút để không tràn mép phải */
+#editor-container .top-controls .row:has(#author-input){
+  padding-right:8px!important;
+}
+#editor-container .top-controls .row:has(#author-input) button[onmousedown*="openGoogleScriptSettingDialog"]{
+  width:58px!important;
+  flex:0 0 58px!important;
+  min-width:58px!important;
+  max-width:58px!important;
+  font-size:9.2px!important;
+  padding:0 1px!important;
+  border-radius:8px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
